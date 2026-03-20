@@ -15,6 +15,7 @@
             margin: 0; padding: 0; width: 100%; height: 100%;
             overflow: hidden; font-family: 'Arial', sans-serif;
             background-color: var(--soft-pink);
+            touch-action: manipulation; /* Optimiza toques en móvil */
         }
 
         /* --- PORTADA --- */
@@ -33,28 +34,26 @@
             background-color: white; border: 2px solid var(--hot-pink);
             color: var(--hot-pink); padding: 15px 30px; font-size: 1rem;
             margin: 10px; cursor: pointer; border-radius: 50px;
-            font-weight: bold; transition: 0.3s; width: min(250px, 80%);
+            font-weight: bold; width: min(250px, 80%);
             box-shadow: 0 4px 0px #c2185b;
         }
 
-        .btn-retro:hover { background-color: var(--hot-pink); color: white; transform: translateY(-3px); }
-
-        /* --- CARTA CON FOTO --- */
+        /* --- CARTA --- */
         #carta {
             display: none; position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%); background: white;
-            padding: 25px; width: 85%; max-width: 400px;
+            padding: 20px; width: 85%; max-width: 380px;
             border-radius: 20px; border: 3px solid #f48fb1;
-            z-index: 2000; text-align: center; box-shadow: 0 10px 50px rgba(0,0,0,0.2);
-            max-height: 90vh; overflow-y: auto;
+            z-index: 2000; text-align: center;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.2);
         }
 
         .foto-carta {
-            width: 100%; max-width: 200px; border-radius: 15px;
-            margin: 15px 0; border: 3px solid var(--soft-pink);
+            width: 100%; max-width: 180px; border-radius: 15px;
+            margin: 10px 0; border: 2px solid var(--soft-pink);
         }
 
-        /* --- ESCENARIO NEÓN (Efecto Zoom) --- */
+        /* --- ESCENARIO NEÓN --- */
         #neon-stage {
             display: none; position: fixed; top: 0; left: 0;
             width: 100%; height: 100%; background-color: #000; z-index: 500;
@@ -62,9 +61,9 @@
 
         .grid-container {
             position: absolute; width: 100%; height: 100%;
-            background: linear-gradient(0deg, rgba(0,255,255,0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px);
-            background-size: 40px 40px;
+            background: linear-gradient(0deg, rgba(0,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
 
         #neon-text-container {
@@ -74,47 +73,61 @@
         }
 
         .neon-text-base {
-            color: #fff; font-size: clamp(1.2rem, 6vw, 2.5rem); font-weight: 900;
-            text-transform: uppercase; text-shadow: 0 0 15px var(--neon-pink);
+            color: #fff; font-size: clamp(1.1rem, 5vw, 2rem); font-weight: 900;
+            text-transform: uppercase; text-shadow: 0 0 10px var(--neon-pink);
         }
 
-        /* Elementos que vuelan hacia afuera */
+        /* --- ANIMACIÓN CSS (Hardware Accelerated) --- */
         .zoom-item {
             position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            opacity: 0; pointer-events: none;
+            will-change: transform, opacity; /* Aviso al navegador para optimizar */
+            animation: zoomFly 3s linear forwards;
+            pointer-events: none;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        .zoom-item img { filter: drop-shadow(0 0 8px var(--neon-pink)); }
+        @keyframes zoomFly {
+            0% {
+                transform: translate(-50%, -50%) scale(0) translate(0, 0);
+                opacity: 0;
+            }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% {
+                /* El var(--tx) y var(--ty) se dan por JS aleatoriamente */
+                transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(3);
+                opacity: 0;
+            }
+        }
 
         #btn-volver {
             position: absolute; top: 20px; right: 20px; z-index: 3000;
-            padding: 10px 15px; background: black; border: 1px solid var(--neon-pink);
-            color: var(--neon-pink); cursor: pointer; border-radius: 5px; font-size: 0.8rem;
+            padding: 8px 15px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-pink);
+            color: var(--neon-pink); border-radius: 5px; font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
 
     <div id="portada">
-        <h1 class="portada-title">Para Mi Amor ❤️</h1>
-        <button class="btn-retro" onclick="abrirCarta()">❤️ Cartita para vos ❤️</button>
-        <button class="btn-retro" onclick="abrirNeon()">❤️ Una sorpresa ❤️</button>
+        <h1 class="portada-title"> ❤️ Para Mi Amor ❤️</h1>
+        <button class="btn-retro" onclick="abrirCarta()">❤️ Cartita</button>
+        <button class="btn-retro" onclick="abrirNeon()">❤️ sorpresa</button>
     </div>
 
     <div id="carta">
-        <h2 style="color: var(--hot-pink); margin-top: 0;">Hola mi vida ❤️</h2>
-        <img src="https://i.postimg.cc/GhDmKCJJ/retouch-2026032018130123.png" class="foto-carta" alt="Nosotros">
-        <p>Hice esto para recordarte lo mucho que te amo. Eres la persona más especial del mundo y quiero estar siempre con vos.</p>
-        <button class="btn-retro" style="width: 150px;" onclick="cerrarTodo()">Cerrar</button>
+        <h2 style="color: var(--hot-pink); margin-bottom: 5px;">Hola mi vida ❤️</h2>
+        <img src="https://i.postimg.cc/GhDmKCJJ/retouch-2026032018130123.png" class="foto-carta">
+        <p style="font-size: 0.95rem;">Hice esto para recordarte lo mucho que te amo. Eres la persona más especial del mundo.</p>
+        <button class="btn-retro" style="width: 120px; padding: 10px;" onclick="cerrarTodo()">Cerrar</button>
     </div>
 
     <div id="neon-stage">
         <button id="btn-volver" onclick="cerrarTodo()">Volver</button>
         <div class="grid-container"></div>
-        <div id="zoom-layer" style="position:relative; width:100%; height:100%;"></div>
+        <div id="zoom-layer"></div>
         <div id="neon-text-container">
-            <h1 class="neon-text-base">para la mas linda del mundo</h1>
+            <h1 class="neon-text-base">para la mas linda </h1>
         </div>
     </div>
 
@@ -129,69 +142,47 @@
             "https://i.postimg.cc/HWRLbx5S/retouch-2026032018180187.png"
         ];
 
-        const frases = ["Te amo", "Mi vida", "Me encantas", "Eres mi sol", "Siempre juntos", "Love you", "Te quiero", "Mi todo"];
-        const colores = ["#ff00ff", "#00ffff", "#00ff00", "#ffff00", "#ff8000"];
+        const frases = ["Te amo", "Mi vida", "Me encantas", "Eres unica", "Te quiero", "Mi todo", "Hermosa", "sos especial", "te extraño", "sos hermosa", "te amo"];
+        const colores = ["#ff00ff", "#00ffff", "#00ff00", "#ffff00"];
 
         function abrirCarta() { document.getElementById('carta').style.display = 'block'; }
         function cerrarTodo() { location.reload(); }
 
         function abrirNeon() {
             document.getElementById('portada').style.display = 'none';
-            document.getElementById('carta').style.display = 'none';
             document.getElementById('neon-stage').style.display = 'block';
-            iniciarEfectoZoom();
+            
+            // Generador de elementos con intervalo más relajado para móviles
+            setInterval(crearElementoZoom, 800); 
         }
 
-        function iniciarEfectoZoom() {
+        function crearElementoZoom() {
             const layer = document.getElementById('zoom-layer');
-            let counter = 0;
+            const el = document.createElement('div');
+            el.className = 'zoom-item';
 
-            setInterval(() => {
-                const esImagen = Math.random() > 0.4;
-                const el = document.createElement('div');
-                el.className = 'zoom-item';
+            // Dirección aleatoria de salida
+            const angle = Math.random() * Math.PI * 2;
+            const dist = window.innerWidth > 600 ? 400 : 250; // Menos distancia en móvil
+            const tx = Math.cos(angle) * dist + "px";
+            const ty = Math.sin(angle) * dist + "px";
+            
+            el.style.setProperty('--tx', tx);
+            el.style.setProperty('--ty', ty);
 
-                // Posición aleatoria para que no salgan todos exactos del mismo punto
-                const offset = (Math.random() - 0.5) * 40;
-                el.style.marginLeft = `${offset}px`;
-                el.style.marginTop = `${offset}px`;
+            if (Math.random() > 0.5) {
+                const img = imagenesUrls[Math.floor(Math.random() * imagenesUrls.length)];
+                el.innerHTML = `<img src="${img}" style="width: 80px; filter: drop-shadow(0 0 5px var(--neon-pink));">`;
+            } else {
+                const txt = frases[Math.floor(Math.random() * frases.length)];
+                const col = colores[Math.floor(Math.random() * colores.length)];
+                el.innerHTML = `<span style="color:${col}; font-weight:bold; text-shadow:0 0 8px ${col}; font-size:1.2rem; white-space:nowrap;">${txt}</span>`;
+            }
 
-                if (esImagen) {
-                    const imgUrl = imagenesUrls[Math.floor(Math.random() * imagenesUrls.length)];
-                    el.innerHTML = `<img src="${imgUrl}" style="width: clamp(60px, 20vw, 120px);">`;
-                } else {
-                    const txt = frases[Math.floor(Math.random() * frases.length)];
-                    const col = colores[Math.floor(Math.random() * colores.length)];
-                    el.innerHTML = `<span style="color:${col}; font-weight:bold; text-shadow:0 0 10px ${col}; font-size: clamp(0.8rem, 4vw, 1.5rem);">${txt}</span>`;
-                }
+            layer.appendChild(el);
 
-                layer.appendChild(el);
-
-                // Animación con JS para control total del zoom
-                let scale = 0;
-                let opacity = 0;
-                let dist = 0; // Para que se muevan hacia afuera
-                const angle = Math.random() * Math.PI * 2;
-                const vx = Math.cos(angle);
-                const vy = Math.sin(angle);
-
-                function animate() {
-                    scale += 0.015;
-                    opacity = scale < 0.5 ? scale * 2 : 1 - (scale - 0.5) * 2;
-                    dist += 4;
-
-                    el.style.transform = `translate(calc(-50% + ${vx * dist}px), calc(-50% + ${vy * dist}px)) scale(${scale * 3})`;
-                    el.style.opacity = opacity;
-
-                    if (scale < 1.2) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        el.remove();
-                    }
-                }
-                animate();
-
-            }, 600); // Crea un elemento nuevo cada 600ms
+            // Limpieza automática para no saturar la memoria
+            setTimeout(() => { el.remove(); }, 3000);
         }
     </script>
 </body>
