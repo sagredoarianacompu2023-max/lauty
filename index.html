@@ -3,468 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Mi Amor 💖</title>
+    <title>Para Mi Amor ❤️</title>
     <style>
-        /* CSS GENERAL Y DE PORTADA */
         :root {
             --neon-pink: #ff00ff;
             --neon-blue: #00ffff;
             --neon-green: #00ff00;
             --neon-yellow: #ffff00;
             --neon-orange: #ff8000;
-            --pink-bg: #ffccff; /* Color de respaldo si no carga el fondo */
         }
 
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: 'Courier New', Courier, monospace;
-            background-color: var(--pink-bg);
-            background-size: cover;
-            background-position: center;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #000;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background 0.5s;
         }
 
-        /* --- SECCIÓN PORTADA (Inicio) --- */
+        /* --- PORTADA --- */
         #portada {
             text-align: center;
-            display: block;
-            z-index: 5;
-        }
-
-        .portada-title {
-            color: #d81b60;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 50px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .btn-retro {
-            background-color: transparent;
-            border: 2px solid #d81b60;
-            color: #d81b60;
-            padding: 15px 30px;
+            background: rgba(255, 20, 147, 0.2);
+            border: 2px solid #ff1493;
+            color: #ff1493;
+            padding: 15px 40px;
             font-size: 1.2rem;
-            margin: 15px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 50px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            overflow: hidden;
+            font-weight: bold;
             transition: 0.3s;
-            box-shadow: 0 4px #c2185b;
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.4);
         }
 
         .btn-retro:hover {
-            background-color: #d81b60;
+            background: #ff1493;
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px #c2185b;
+            box-shadow: 0 0 30px #ff1493;
         }
 
-        .btn-retro:active {
-            box-shadow: 0 0 #c2185b;
-            transform: translateY(4px);
-        }
-
-        /* --- SECCIÓN CARTA DE AMOR --- */
-        #carta {
-            display: none;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 3px solid #f48fb1;
-            transform: scale(0.8);
-            opacity: 0;
-            transition: 0.5s;
-        }
-
-        #carta.active {
-            display: block;
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .carta-content {
-            color: #444;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-
-        /* --- SECCIÓN ESCENARIO NEÓN (Actualizada con mejoras) --- */
+        /* --- ESCENARIO NEÓN --- */
         #neon-stage {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            z-index: 10;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #1a001a 0%, #000 100%);
         }
 
-        #neon-stage.active {
-            display: block;
-        }
+        #neon-stage.active { display: block; }
 
-        /* Cuadrícula Retro */
         .grid-container {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(0deg, rgba(0,255,255,0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
-            perspective: 500px;
-            overflow: hidden;
+            width: 100%; height: 100%;
+            background: linear-gradient(0deg, rgba(0,255,255,0.1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            perspective: 1000px;
         }
 
         .grid-floor {
-            position: absolute;
-            width: 200%;
-            height: 100%;
-            bottom: 0;
-            left: -50%;
-            background: inherit;
-            transform: rotateX(60deg);
-            transform-origin: center bottom;
+            position: absolute; width: 200%; height: 100%; bottom: 0; left: -50%;
+            background: inherit; transform: rotateX(60deg); transform-origin: center bottom;
         }
 
-        /* El Texto Central Neón Expandiéndose (Actualizado para usar colores aleatorios) */
+        /* Texto Central */
         #neon-text-container {
-            position: absolute;
-            top: 50%; /* Centrado verticalmente */
-            left: 50%;
+            position: absolute; top: 55%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 90%;
-            text-align: center;
-            font-family: sans-serif; /* Usamos una fuente sin serifa gruesa */
-            z-index: 10;
+            z-index: 50; text-align: center; width: 100%;
         }
 
         .neon-text-base {
-            color: #fff;
-            font-size: 3rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin: 0;
-            opacity: 0;
-            transform: scale(0.5);
-            transition: opacity 1s, transform 1s, text-shadow 1s;
+            font-size: 3.5rem; font-weight: 900; text-transform: uppercase;
+            color: #fff; opacity: 0; transform: scale(0.3);
+            transition: 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
 
-        /* Clase para activar la expansión */
-        .expandir {
-            opacity: 1;
-            transform: scale(1);
-        }
+        .expandir { opacity: 1; transform: scale(1); }
 
-        /* --- MEJORA 2: Frases Románticas Flotantes --- */
-        #floating-phrases-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none; /* No interfieren con clics */
-            overflow: hidden;
-            z-index: 8; /* Entre la cuadrícula y el texto central */
-        }
-
+        /* Frases y Dibujos */
         .floating-phrase {
-            position: absolute;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Brillo base */
-            opacity: 0.8;
-            pointer-events: none;
-        }
-
-        /* --- MEJORA 3: Personajes que se Expandirán --- */
-        #characters-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 12; /* Por encima de todo */
+            position: absolute; font-weight: bold; white-space: nowrap;
+            pointer-events: none; z-index: 40;
         }
 
         .character {
-            position: absolute;
-            transition: transform 0.1s ease-out, scale 1s;
-            pointer-events: none;
-            
-            /* Para el efecto de expansión inicial */
-            transform: scale(0);
-            opacity: 0;
+            position: absolute; pointer-events: none; z-index: 60;
+            opacity: 0; transform: scale(0) rotate(-10deg);
+            transition: 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .character img {
-            width: 100%;
-            height: auto;
-        }
+        .character img { width: 100%; height: auto; border-radius: 10px; }
 
-        /* Clase para activar la expansión del personaje */
-        .character.expandir {
-            opacity: 1;
-            transform: scale(1);
-        }
+        .character.expandir-char { opacity: 1; transform: scale(1) rotate(0deg); }
 
-        /* Botón de Regreso */
-        #btn-regresar {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(255, 0, 255, 0.2);
-            color: var(--neon-pink);
-            border: 1px solid var(--neon-pink);
-            z-index: 20;
-            box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
-            font-size: 1rem;
-            padding: 10px 20px;
+        #btn-volver {
+            position: absolute; top: 20px; left: 20px; z-index: 200;
+            padding: 10px 20px; background: none; border: 1px solid #fff;
+            color: #fff; cursor: pointer; opacity: 0.5;
         }
-
     </style>
 </head>
 <body>
 
     <div id="portada">
-        <h1 class="portada-title">Para Mi Amor ❤️</h1>
-        <button class="btn-retro" onclick="abrirCarta()">Una Carta</button>
-        <button class="btn-retro" onclick="abrirNeon()">Imagen 3D Neón</button>
-    </div>
-
-    <div id="carta">
-        <h2 style="color: #d81b60; text-align: center;">Para mi  ❤️</h2>
-        <div class="carta-content">
-            <p>He creado este rinconcito digital para que siempre tengas un lugar donde refugiarte cuando me extrañes. 😊</p>
-            <p>¡Espero que te guste!</p>
-            <p style="text-align: right;">- De lauty </p>
-        </div>
-        <button class="btn-retro" style="margin-top: 20px; font-size: 1rem; padding: 10px 20px;" onclick="regresarAPortada()">Cerrar</button>
+        <h1 style="color: white; margin-bottom: 20px;">Haz clic aquí ❤️</h1>
+        <button class="btn-retro" onclick="abrirNeon()">Ver sorpresa</button>
     </div>
 
     <div id="neon-stage">
-        <div class="grid-container">
-            <div class="grid-floor"></div>
-        </div>
-        
-        <div id="floating-phrases-container"></div>
-        
-        <div id="characters-container"></div>
-        
+        <button id="btn-volver" onclick="window.location.reload()">Volver</button>
+        <div class="grid-container"><div class="grid-floor"></div></div>
+        <div id="phrases-layer"></div>
+        <div id="chars-layer"></div>
         <div id="neon-text-container">
-            <h1 class="neon-text-base">Amor de mi vida</h1>
+            <h1 class="neon-text-base" id="main-text">Amor de mi vida</h1>
         </div>
-
-        <button class="btn-retro" id="btn-regresar" onclick="regresarAPortada()">Volver</button>
     </div>
 
     <script>
-        // --- CONFIGURACIÓN DE LINKS DE IMÁGENES (Usa tus links de Postimages) ---
-        // Te recomiendo usar imágenes .png con fondo transparente.
-        const spiderman1Url = 'https://i.postimg.cc/85z11jH7/mc-day-bg.jpg'; // Spiderman arriba center (cambia por tu link PNG)
-        const kittyUrl = 'https://i.postimg.cc/W34L2F74/mc-sunset-bg.jpg';      // Hello Kitty derecha center (cambia por tu link PNG)
-        const spiderman2Url = 'https://i.postimg.cc/mD3f44R0/mc-cave-bg.jpg'; // Spiderman colgando izquierda bot (cambia por tu link PNG)
-        const gifCorazonesUrl = 'https://i.postimg.cc/mD8zWbKq/pink-hearts.gif'; // GIF de corazones rosas para el fondo de portada.
-
-        // --- LISTA DE FRASES ROMÁNTICAS FLOTANTES (Mejora 2) ---
-        const listaFrasesRomanticas = [
-            "Te amo", "Eres mi todo", "Mi vida", "Mi sol", "Mi amor eterno",
-            "Siempre juntos", "Me haces feliz", "Te extraño", "Mi corazoncito",
-            "La más bella", "Mi cielo", "linda", "ojitos cafe"
+        const imagenes = [
+            "https://i.postimg.cc/wjw6wTZK/descargar-(5).jpg",
+            "https://i.postimg.cc/Mp9W9K4h/descargar-(6).jpg",
+            "https://i.postimg.cc/jSMsMd9p/descargar-(7).jpg",
+            "https://i.postimg.cc/HkYY07ZC/descargar-(8).jpg",
+            "https://i.postimg.cc/K80Z0vwF/Encuentra-el-regalo-hecho-a-mano-perfecto-prendas.jpg",
+            "https://i.postimg.cc/YCdpdqZK/Spider-man-and-hello-kitty.jpg",
+            "https://i.postimg.cc/Dwx2xyHh/ㅤ.jpg"
         ];
 
-        // --- COLORES NEÓN (Mejora 2) ---
-        const coloresNeon = [
-            "#ff00ff", // rosa
-            "#00ffff", // azul
-            "#00ff00", // verde
-            "#ffff00", // amarillo
-            "#ff8000"  // naranja
-        ];
-
-        // --- LÓGICA GENERAL DE NAVEGACIÓN ---
-        function abrirCarta() {
-            document.getElementById('portada').style.display = 'none';
-            document.getElementById('carta').classList.add('active');
-            document.body.style.backgroundImage = 'none';
-        }
+        const frases = ["Te amo", "Eres mi sol", "Mi palito bombón", "Siempre juntos", "Me encantas", "Mi vida entera", "Love you"];
+        const colores = ["#ff00ff", "#00ffff", "#00ff00", "#ffff00", "#ff8000"];
 
         function abrirNeon() {
             document.getElementById('portada').style.display = 'none';
-            document.getElementById('neon-stage').classList.add('active');
-            // Cargar fondo solo para neón
-            document.body.style.backgroundImage = `url(${gifCorazonesUrl})`;
-            
-            // Iniciar animaciones neón
-            iniciarEfectosNeon();
-        }
+            const stage = document.getElementById('neon-stage');
+            stage.classList.add('active');
 
-        function regresarAPortada() {
-            document.getElementById('carta').classList.remove('active');
-            document.getElementById('neon-stage').classList.remove('active');
-            document.getElementById('portada').style.display = 'block';
-            detenerEfectosNeon();
-            document.body.style.backgroundImage = 'none';
-        }
+            // 1. Expandir texto principal con color aleatorio
+            const mainText = document.getElementById('main-text');
+            const colorRandom = colores[Math.floor(Math.random() * colores.length)];
+            mainText.style.textShadow = `0 0 20px ${colorRandom}, 0 0 40px ${colorRandom}`;
+            setTimeout(() => mainText.classList.add('expandir'), 100);
 
-        // --- LÓGICA DE LOS EFECTOS NEÓN ---
-        let neonTimers = []; 
-
-        function iniciarEfectosNeon() {
-            // Limpiar timers anteriores
-            detenerEfectosNeon();
-
-            // 1. Cargar y animar texto central (con color aleatorio)
-            cargarTextoNeonCentral();
-
-            // 2. Cargar y animar personajes (se expandirán)
-            cargarPersonajesQueSeExpandirán();
-
-            // 3. Iniciar frases románticas flotantes (Mejora 2)
-            iniciarFrasesFlotantes();
-
-            // 4. Iniciar movimiento sutil con el mouse
-            iniciarMovimientoPersonajesConMouse();
-        }
-
-        function detenerEfectosNeon() {
-            neonTimers.forEach(timer => clearInterval(timer));
-            neonTimers = [];
-            document.getElementById('characters-container').innerHTML = '';
-            document.getElementById('neon-text-container').innerHTML = '';
-            document.getElementById('floating-phrases-container').innerHTML = '';
-        }
-
-        // --- MEJORA 1: Cargar Texto Central con Color Aleatorio ---
-        function cargarTextoNeonCentral() {
-            const container = document.getElementById('neon-text-container');
-            container.innerHTML = ''; 
-
-            const h1 = document.createElement('h1');
-            h1.classList.add('neon-text-base');
-            h1.innerText = 'Amor de mi vida';
-            
-            // Elegir color aleatorio
-            const color = coloresNeon[Math.floor(Math.random() * coloresNeon.length)];
-            
-            // Aplicar sombra neón con ese color
-            h1.style.textShadow = `0 0 10px ${color}, 0 0 20px ${color}, 0 0 30px ${color}`;
-
-            container.appendChild(h1);
-
-            // Iniciar expansión después de un retraso
-            setTimeout(() => {
-                h1.classList.add('expandir');
-            }, 500);
-        }
-
-        // --- MEJORA 3: Cargar Personajes que se Expandirán al aparecer ---
-        function cargarPersonajesQueSeExpandirán() {
-            const container = document.getElementById('characters-container');
-            const personajes = [
-                { url: spiderman1Url, size: 80, targetPos: { top: '30%', left: '50%' } }, // Spiderman 1
-                { url: kittyUrl, size: 70, targetPos: { top: '50%', left: '70%' } },       // Kitty
-                { url: spiderman2Url, size: 90, targetPos: { top: '70%', left: '30%' } }, // Spiderman 2
-            ];
-
-            personajes.forEach((p, index) => {
-                const charDiv = document.createElement('div');
-                charDiv.classList.add('character');
-                charDiv.id = `char-${index}`;
-                charDiv.style.width = `${p.size}px`;
-                charDiv.style.top = p.targetPos.top;
-                charDiv.style.left = p.targetPos.left;
-                
-                const img = document.createElement('img');
-                img.src = p.url;
-                img.alt = `Personaje ${index}`;
-                
-                charDiv.appendChild(img);
-                container.appendChild(charDiv);
-
-                // Forzar expansión después de un pequeño retraso
+            // 2. Generar personajes que se expanden
+            imagenes.forEach((url, i) => {
                 setTimeout(() => {
-                    charDiv.classList.add('expandir');
-                }, 700 + index * 200); // Retraso escalonado para cada personaje
+                    const char = document.createElement('div');
+                    char.className = 'character';
+                    char.style.width = (100 + Math.random() * 50) + "px";
+                    char.style.left = (10 + Math.random() * 70) + "%";
+                    char.style.top = (10 + Math.random() * 40) + "%";
+                    char.innerHTML = `<img src="${url}">`;
+                    document.getElementById('chars-layer').appendChild(char);
+                    setTimeout(() => char.classList.add('expandir-char'), 50);
+                }, i * 400);
             });
-        }
 
-        // --- MEJORA 2: Frases Románticas Flotantes alrededor del centro ---
-        function iniciarFrasesFlotantes() {
-            const container = document.getElementById('floating-phrases-container');
-            
-            const timer = setInterval(() => {
-                const phraseText = listaFrasesRomanticas[Math.floor(Math.random() * listaFrasesRomanticas.length)];
-                const phraseColor = coloresNeon[Math.floor(Math.random() * coloresNeon.length)];
-                
-                const span = document.createElement('span');
-                span.classList.add('floating-phrase');
-                span.innerText = phraseText;
-                span.style.color = phraseColor;
-                span.style.textShadow = `0 0 10px ${phraseColor}`;
-                
-                // Posicionamiento horizontal aleatorio (más o menos centrado)
-                span.style.left = `${10 + Math.random() * 80}%`;
-                span.style.top = '100%'; // Comienzan abajo
+            // 3. Generar frases flotantes multicolores
+            setInterval(() => {
+                const phrase = document.createElement('div');
+                const color = colores[Math.floor(Math.random() * colores.length)];
+                phrase.className = 'floating-phrase';
+                phrase.innerText = frases[Math.floor(Math.random() * frases.length)];
+                phrase.style.color = color;
+                phrase.style.textShadow = `0 0 10px ${color}`;
+                phrase.style.left = Math.random() * 90 + "%";
+                phrase.style.top = "100%";
+                document.getElementById('phrases-layer').appendChild(phrase);
 
-                // Movimiento hacia arriba
-                const speed = 2 + Math.random() * 2; // Velocidad aleatoria suave
-                let topPos = 100;
-                
-                const moveTimer = setInterval(() => {
-                    topPos -= speed;
-                    span.style.top = `${topPos}%`;
-                    
-                    // Eliminar si sale de la pantalla
-                    if (topPos < -10) {
-                        clearInterval(moveTimer);
-                        span.remove();
+                let pos = 100;
+                const anim = setInterval(() => {
+                    pos -= 0.5;
+                    phrase.style.top = pos + "%";
+                    if (pos < -10) {
+                        clearInterval(anim);
+                        phrase.remove();
                     }
-                }, 30); // 30ms para movimiento suave
-                
-                container.appendChild(span);
-
-            }, 800); // Nueva frase cada 800ms
-            
-            neonTimers.push(timer);
+                }, 20);
+            }, 800);
         }
 
-        // Movimiento sutil de personajes con el mouse (Mantenido)
-        function iniciarMovimientoPersonajesConMouse() {
-            document.addEventListener('mousemove', (e) => {
-                // Solo mover si la pestaña neón está activa
-                if (!document.getElementById('neon-stage').classList.contains('active')) return;
-
-                const width = window.innerWidth;
-                const height = window.innerHeight;
-                
-                const mouseX = e.clientX / width - 0.5; // -0.5 a 0.5
-                const mouseY = e.clientY / height - 0.5; // -0.5 a 0.5
-
-                const chars = document.querySelectorAll('.character');
-                chars.forEach(char => {
-                    // Mover suavemente en el eje X e Y
-                    char.style.transform = `translate(${mouseX * 20}%, ${mouseY * 20}%) scale(1)`; 
-                    // El "scale(1)" es crucial para que no se resetee la expansión
-                });
-            });
-        }
-
+        // Efecto de movimiento sutil con el mouse
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.05;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.05;
+            document.getElementById('chars-layer').style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
     </script>
 </body>
 </html>
