@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Mi Amor ❤️</title>
+    <style>
+        /* CSS GENERAL Y DE PORTADA */
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --pink-bg: #ffccff; /* Color sólido de respaldo si no carga el GIF */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--pink-bg);
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.5s;
+        }
+
+        /* --- SECCIÓN PORTADA --- */
+        #portada {
+            text-align: center;
+            display: block;
+        }
+
+        .portada-title {
+            color: #d81b60;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 50px;
+        }
+
+        .btn-retro {
+            background-color: transparent;
+            border: 2px solid #d81b60;
+            color: #d81b60;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            margin: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            box-shadow: 0 4px #c2185b;
+        }
+
+        .btn-retro:hover {
+            background-color: #d81b60;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px #c2185b;
+        }
+
+        .btn-retro:active {
+            box-shadow: 0 0 #c2185b;
+            transform: translateY(4px);
+        }
+
+        /* --- SECCIÓN CARTA DE AMOR --- */
+        #carta {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 3px solid #f48fb1;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: 0.5s;
+        }
+
+        #carta.active {
+            display: block;
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .carta-content {
+            color: #444;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        /* --- SECCIÓN IMAGEN 3D / NEÓN (RECREACIÓN IMAGEN 2) --- */
+        #neon-stage {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 10;
+        }
+
+        #neon-stage.active {
+            display: block;
+        }
+
+        /* Cuadrícula Retro */
+        .grid-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0,255,255,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            perspective: 500px;
+            overflow: hidden;
+        }
+
+        .grid-floor {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            bottom: 0;
+            left: -50%;
+            background: inherit;
+            transform: rotateX(60deg);
+            transform-origin: center bottom;
+        }
+
+        /* Personajes Flotando */
+        .character {
+            position: absolute;
+            z-index: 5;
+            transition: transform 0.1s ease-out;
+            pointer-events: none; /* No interfieren con clics */
+        }
+
+        .character img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Partículas Neón */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-blue);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* El Texto Neón Expandiéndose */
+        #neon-text-container {
+            position: absolute;
+            top: 60%; /* Posición abajo como en la imagen */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            text-align: center;
+            font-family: 'Te Amo', sans-serif; /* Usamos una fuente pixelada para dar el efecto retro */
+            z-index: 10;
+        }
+
+        .neon-text {
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin: 0;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 1s, transform 1s;
+        }
+
+        /* Clase para activar la expansión */
+        .expandir {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Botón de Regreso */
+        #btn-regresar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 0, 255, 0.2);
+            color: var(--neon-pink);
+            border: 1px solid var(--neon-pink);
+            z-index: 20;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="portada">
+        <h1 class="portada-title">Para Mi Amor ❤️</h1>
+        <button class="btn-retro" onclick="abrirCarta()">Una Carta</button>
+        <button class="btn-retro" onclick="abrirNeon()">Imagen 3D</button>
+    </div>
+
+    <div id="carta">
+        <h2 style="color: #d81b60; text-align: center;">Para mi palito bombón ❤️</h2>
+        <div class="carta-content">
+            <p>He creado este rinconcito digital para que siempre tengas un lugar donde refugiarte cuando me extrañes. 😊</p>
+            <p>La verdad es que te amo mucho, y me cuesta no pensarte. Me encanta darte detalles, aunque pequeños, porque sé que te hacen sonreír. ¡Espero que te guste!</p>
+            <p style="text-align: right;">- Tu amor eterno</p>
+        </div>
+        <button class="btn-retro" style="margin-top: 20px; font-size: 1rem; padding: 10px 20px;" onclick="regresarAPortada()">Cerrar</button>
+    </div>
+
+    <div id="neon-stage">
+        <div class="grid-container">
+            <div class="grid-floor"></div>
+        </div>
+        
+        <div id="characters-container"></div>
+        
+        <div id="neon-text-container">
+            <h1 class="neon-text">Amor de mi vida</h1>
+        </div>
+
+        <button class="btn-retro" id="btn-regresar" onclick="regresarAPortada()">Volver</button>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN DE LINKS DE IMÁGENES ---
+        // Reemplaza estos links por tus propias imágenes de Postimages (Direct Link).
+        const gifCorazonesUrl = 'https://i.postimg.cc/mD8zWbKq/pink-hearts.gif'; // Un GIF de corazones rosas para el fondo de la portada.
+        const personajes1Url = 'https://i.postimg.cc/85z11jH7/mc-day-bg.jpg'; // Imagen de Spiderman (arriba center).
+        const personajes2Url = 'https://i.postimg.cc/W34L2F74/mc-sunset-bg.jpg'; // Imagen de Hello Kitty (derecha center).
+        const personajes3Url = 'https://i.postimg.cc/mD3f44R0/mc-cave-bg.jpg'; // Imagen de Spiderman colgando (izquierda bot).
+
+        // --- LÓGICA GENERAL DE NAVEGACIÓN ---
+        function abrirCarta() {
+            document.getElementById('portada').style.display = 'none';
+            document.getElementById('carta').classList.add('active');
+        }
+
+        function abrirNeon() {
+            document.getElementById('portada').style.display = 'none';
+            document.getElementById('neon-stage').classList.add('active');
+            
+            // Iniciar animaciones neón
+            iniciarEfectosNeon();
+        }
+
+        function regresarAPortada() {
+            document.getElementById('carta').classList.remove('active');
+            document.getElementById('neon-stage').classList.remove('active');
+            document.getElementById('portada').style.display = 'block';
+            
+            // Detener efectos de neón para ahorrar recursos
+            detenerEfectosNeon();
+        }
+
+        // --- LÓGICA DE LOS EFECTOS NEÓN ---
+        let neonTimers = []; // Para detener las animaciones
+
+        function iniciarEfectosNeon() {
+            // 1. Cargar el GIF de fondo en el body solo para la portada
+            document.body.style.backgroundImage = `url(${gifCorazonesUrl})`;
+
+            // 2. Cargar personajes y texto
+            cargarPersonajes();
+            cargarTextoNeon();
+            iniciarParticulas();
+            iniciarMovimientoPersonajes();
+        }
+
+        function detenerEfectosNeon() {
+            // Detener timers
+            neonTimers.forEach(timer => clearInterval(timer));
+            neonTimers = [];
+
+            // Limpiar contenedores
+            document.getElementById('characters-container').innerHTML = '';
+            document.getElementById('neon-text-container').innerHTML = ''; // Limpiar el texto para que se vuelva a expandir
+            
+            // Restaurar fondo
+            document.body.style.backgroundImage = 'none';
+        }
+
+        function cargarPersonajes() {
+            const container = document.getElementById('characters-container');
+            const personajes = [
+                { url: personajes1Url, size: 80, pos: { top: '30%', left: '50%' }, target: { top: 30, left: 50 } }, // Spiderman arriba
+                { url: personajes2Url, size: 70, pos: { top: '50%', left: '70%' }, target: { top: 50, left: 70 } }, // Hello Kitty derecha
+                { url: personajes3Url, size: 90, pos: { top: '70%', left: '30%' }, target: { top: 70, left: 30 } }, // Spiderman colgando izquierda
+            ];
+
+            personajes.forEach((p, index) => {
+                const char = document.createElement('div');
+                char.classList.add('character');
+                char.id = `char-${index}`;
+                char.style.width = `${p.size}px`;
+                char.style.top = p.pos.top;
+                char.style.left = p.pos.left;
+                
+                const img = document.createElement('img');
+                img.src = p.url;
+                img.alt = `Personaje ${index}`;
+                
+                char.appendChild(img);
+                container.appendChild(char);
+
+                // Guardar posición objetivo para el movimiento del mouse
+                char.dataset.targetX = p.target.left;
+                char.dataset.targetY = p.target.top;
+            });
+        }
+
+        // Cargar y animar el texto neón
+        function cargarTextoNeon() {
+            const container = document.getElementById('neon-text-container');
+            container.innerHTML = ''; // Limpiar
+
+            const h1 = document.createElement('h1');
+            h1.classList.add('neon-text');
+            h1.innerText = 'Amor de mi vida';
+            container.appendChild(h1);
+
+            // Iniciar expansión después de un pequeño retraso
+            setTimeout(() => {
+                h1.classList.add('expandir');
+            }, 500);
+        }
+
+        // Partículas neón flotando
+        function iniciarParticulas() {
+            const container = document.getElementById('neon-stage');
+            const timer = setInterval(() => {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                p.style.left = `${Math.random() * 100}%`;
+                p.style.top = '100%'; // Comienzan desde abajo
+
+                // Movimiento hacia arriba
+                const speed = 2 + Math.random() * 3; // Velocidad aleatoria
+                let top = 100;
+                
+                const moveTimer = setInterval(() => {
+                    top -= speed;
+                    p.style.top = `${top}%`;
+                    
+                    // Eliminar partícula si sale de la pantalla
+                    if (top < -5) {
+                        clearInterval(moveTimer);
+                        p.remove();
+                    }
+                }, 30); // 30ms para un movimiento suave
+                
+                container.appendChild(p);
+
+            }, 500); // Nueva partícula cada 500ms
+            
+            neonTimers.push(timer);
+        }
+
+        // Movimiento sutil de personajes con el mouse
+        function iniciarMovimientoPersonajes() {
+            document.addEventListener('mousemove', (e) => {
+                if (!document.getElementById('neon-stage').classList.contains('active')) return;
+
+                const stage = document.getElementById('neon-stage');
+                const width = stage.offsetWidth;
+                const height = stage.offsetHeight;
+                
+                const mouseX = e.clientX / width - 0.5; // -0.5 a 0.5
+                const mouseY = e.clientY / height - 0.5; // -0.5 a 0.5
+
+                const chars = document.querySelectorAll('.character');
+                chars.forEach(char => {
+                    const targetX = parseFloat(char.dataset.targetX);
+                    const targetY = parseFloat(char.dataset.targetY);
+
+                    const finalX = targetX + mouseX * 10; // Mover 10%
+                    const finalY = targetY + mouseY * 10; // Mover 10%
+
+                    char.style.transform = `translate(${finalX - targetX}%, ${finalY - targetY}%)`;
+                });
+            });
+        }
+
+    </script>
+</body>
+</html>
