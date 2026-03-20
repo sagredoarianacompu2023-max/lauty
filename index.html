@@ -7,172 +7,222 @@
     <style>
         :root {
             --neon-pink: #ff00ff;
-            --neon-blue: #00ffff;
-            --pink-bg: #ffccff; /* Color sólido de respaldo si no carga el GIF */
+            --hot-pink: #d81b60;
+            --soft-pink: #ffccff;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Evita barras de desplazamiento */
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background-color: var(--pink-bg);
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; font-family: 'Arial', sans-serif;
+            background-color: var(--soft-pink);
+        }
+
+        /* --- CONTENEDOR PRINCIPAL (PORTADA) --- */
+        #portada {
+            position: absolute;
+            width: 100%; height: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: background 0.5s;
-        }
-
-        /* --- SECCIÓN PORTADA (Inicio) --- */
-        #portada {
-            text-align: center;
-            display: block;
-            z-index: 500; /* Número muy alto para que esté arriba de todo */
+            z-index: 1000; /* Siempre al frente al cargar */
+            background-color: var(--soft-pink);
         }
 
         .portada-title {
-            color: #d81b60;
+            color: var(--hot-pink);
             font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 50px;
-        }
-
-        .btn-retro {
-            background-color: transparent;
-            border: 2px solid #d81b60;
-            color: #d81b60;
-            padding: 15px 35px;
-            font-size: 1.15rem;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 50px;
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0 4px #c2185b;
-            position: relative;
-            z-index: 501; /* Asegura que el botón sea cliqueable */
-            width: 200px;
-        }
-
-        .btn-retro:hover {
-            background-color: #d81b60;
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 6px #c2185b;
-        }
-
-        .btn-retro:active {
-            box-shadow: 0 0 #c2185b;
-            transform: translateY(4px);
-        }
-
-        /* --- SECCIÓN CARTA DE AMOR --- */
-        #carta {
-            display: none;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            width: 85%;
-            max-width: 500px;
-            border-radius: 20px;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.2);
-            border: 3px solid #f48fb1;
-            transform: scale(0.8);
-            opacity: 0;
-            transition: 0.5s;
-            z-index: 600; /* Por encima de la portada al abrir */
-            position: fixed; /* Centrado absoluto */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-        }
-
-        #carta.active {
-            display: block;
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-        }
-
-        .carta-content {
-            color: #444;
-            line-height: 1.6;
-            font-size: 1.15rem;
+            margin-bottom: 30px;
             text-align: center;
         }
 
-        /* --- SECCIÓN ESCENARIO NEÓN (Actualizada con Mejoras) --- */
+        .btn-retro {
+            background-color: white;
+            border: 2px solid var(--hot-pink);
+            color: var(--hot-pink);
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: 0.3s;
+            width: 220px;
+            box-shadow: 0 4px 0px #c2185b;
+        }
+
+        .btn-retro:hover {
+            background-color: var(--hot-pink);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* --- CARTA --- */
+        #carta {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 20px;
+            border: 3px solid #f48fb1;
+            z-index: 2000;
+            text-align: center;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.2);
+        }
+
+        /* --- ESCENARIO NEÓN --- */
         #neon-stage {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-color: #000;
-            z-index: 100; /* Por debajo de la portada y carta al inicio */
+            z-index: 500;
         }
 
-        /* Cuadrícula Retro (Fondo) */
         .grid-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            position: absolute; width: 100%; height: 100%;
             background: linear-gradient(0deg, rgba(0,255,255,0.05) 1px, transparent 1px),
                         linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px);
             background-size: 40px 40px;
         }
 
-        /* El Texto Central Neón (Actualizado) */
         #neon-text-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 90%;
-            text-align: center;
-            font-family: sans-serif;
-            z-index: 200; /* Por encima de las órbitas */
-            pointer-events: none; /* No interfiere con clics */
-        }
-
-        .neon-text-base {
-            color: #fff;
-            font-size: 3rem; /* Tamaño base imponente */
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin: 0;
-            text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink);
-        }
-
-        /* --- ELEMENTOS QUE ORBITARÁN (Nuevos Estilos) --- */
-        .orbit-item {
-            position: absolute;
+            z-index: 600; text-align: center; width: 100%;
             pointer-events: none;
         }
 
-        /* Estilos específicos para los Dibujos PNG Orbitantes */
-        .character-orbit img {
-            width: 100%; /* El contenedor .orbit-item define el tamaño */
-            height: auto;
-            display: block;
-            /* Brillo neón rosa que sigue la forma del PNG transparente */
-            filter: drop-shadow(0 0 8px #ff1493); 
+        .neon-text-base {
+            color: #fff; font-size: 2.8rem; font-weight: 900;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink);
         }
 
-        /* Estilos específicos para las Frases Pequeñas Orbitantes */
-        .phrase-orbit {
-            font-weight: bold;
-            font-size: 1.1rem;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6); /* Brillo base */
-            white-space: nowrap; /* Evita que el texto se parta */
-        }
+        .orbit-item { position: absolute; pointer-events: none; }
+        .character-orbit img { width: 100px; filter: drop-shadow(0 0 8px #ff1493); }
 
-        /* Botón de Regreso (dentro del escenario neón) */
         #btn-volver {
-            position: absolute;
-            top: 20px;
-            right: 20
+            position: absolute; top: 20px; right: 20px; z-index: 3000;
+            padding: 10px 20px; background: black; border: 1px solid var(--neon-pink);
+            color: var(--neon-pink); cursor: pointer; border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="portada">
+        <h1 class="portada-title">Para Mi Amor ❤️</h1>
+        <button class="btn-retro" onclick="abrirCarta()">Una Carta</button>
+        <button class="btn-retro" onclick="abrirNeon()">Imagen 3D Neón</button>
+    </div>
+
+    <div id="carta">
+        <h2 style="color: var(--hot-pink);">Hola mi vida ❤️</h2>
+        <p>Hice esto para recordarte lo mucho que te amo. Eres la persona más especial del mundo.</p>
+        <button class="btn-retro" style="width: 150px;" onclick="cerrarTodo()">Cerrar</button>
+    </div>
+
+    <div id="neon-stage">
+        <button id="btn-volver" onclick="cerrarTodo()">Volver</button>
+        <div class="grid-container"></div>
+        <div id="orbit-layer" style="position:relative; width:100%; height:100%; display:flex; justify-content:center; align-items:center;"></div>
+        <div id="neon-text-container">
+            <h1 class="neon-text-base">Amor de mi vida</h1>
+        </div>
+    </div>
+
+    <script>
+        const imagenesUrls = [
+            "https://i.postimg.cc/2SN1v6vZ/Encuentra-el-regalo-hecho-a-mano-perfecto-prendas-removebg-preview.png",
+            "https://i.postimg.cc/gJB2ScTQ/retouch-2026032018191540.png",
+            "https://i.postimg.cc/GhDmKCJJ/retouch-2026032018130123.png",
+            "https://i.postimg.cc/28WSGDF4/retouch-2026032018133312.png",
+            "https://i.postimg.cc/DfHz1Zsj/retouch-2026032018142587.png",
+            "https://i.postimg.cc/DfHz1ZsB/retouch-2026032018161589.png",
+            "https://i.postimg.cc/HWRLbx5S/retouch-2026032018180187.png"
+        ];
+
+        const frasesTextos = ["Te amo", "Mi sol", "Mi vida", "Siempre juntos", "Love you", "Mi todo"];
+        const colores = ["#ff00ff", "#00ffff", "#00ff00", "#ffff00", "#ff8000"];
+
+        let elementosOrbitantes = [];
+        let animando = false;
+
+        function abrirCarta() {
+            document.getElementById('carta').style.display = 'block';
+        }
+
+        function abrirNeon() {
+            document.getElementById('portada').style.display = 'none';
+            document.getElementById('carta').style.display = 'none';
+            document.getElementById('neon-stage').style.display = 'block';
+            
+            if (!animando) {
+                crearOrbitas();
+                animar();
+                animando = true;
+            }
+        }
+
+        function cerrarTodo() {
+            location.reload(); 
+        }
+
+        function crearOrbitas() {
+            const layer = document.getElementById('orbit-layer');
+            const isMobile = window.innerWidth < 600;
+
+            imagenesUrls.forEach((url, i) => {
+                const div = document.createElement('div');
+                div.className = 'orbit-item character-orbit';
+                div.innerHTML = `<img src="${url}" style="width:${isMobile ? '70px' : '110px'};">`;
+                layer.appendChild(div);
+                elementosOrbitantes.push({
+                    el: div,
+                    angulo: i * (Math.PI * 2 / imagenesUrls.length),
+                    rx: isMobile ? 140 : 280, 
+                    ry: isMobile ? 70 : 130,
+                    vel: 0.005
+                });
+            });
+
+            frasesTextos.forEach((txt, i) => {
+                const span = document.createElement('span');
+                span.className = 'orbit-item';
+                span.innerText = txt;
+                const col = colores[Math.floor(Math.random()*colores.length)];
+                span.style.color = col;
+                span.style.fontWeight = 'bold';
+                span.style.textShadow = `0 0 10px ${col}`;
+                layer.appendChild(span);
+                elementosOrbitantes.push({
+                    el: span,
+                    angulo: i * (Math.PI * 2 / frasesTextos.length) + 0.5,
+                    rx: isMobile ? 180 : 380, 
+                    ry: isMobile ? 100 : 200,
+                    vel: 0.008
+                });
+            });
+        }
+
+        function animar() {
+            elementosOrbitantes.forEach(obj => {
+                obj.angulo += obj.vel;
+                const x = Math.cos(obj.angulo) * obj.rx;
+                const y = Math.sin(obj.angulo) * obj.ry;
+                const s = 0.6 + (Math.sin(obj.angulo) + 1) * 0.3;
+                
+                obj.el.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+                obj.el.style.zIndex = Math.round(s * 100);
+                obj.el.style.opacity = 0.5 + (Math.sin(obj.angulo) + 1) * 0.5;
+            });
+            requestAnimationFrame(animar);
+        }
+    </script>
+</body>
+</html>
