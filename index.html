@@ -115,4 +115,190 @@
             font-size: 1.1rem;
             font-weight: bold;
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Brillo base */
-            white-space: nowrap
+            white-space: nowrap; /* Evita que el texto se parta */
+            pointer-events: none;
+        }
+
+        /* Botón "Volver" (Opcional, si quieres salir de la animación) */
+        #btn-volver {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: rgba(255, 20, 147, 0.1);
+            color: #ff1493;
+            border: 1px solid #ff1493;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 200;
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+        #btn-volver:hover {
+            opacity: 1;
+            background-color: #ff1493;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="neon-stage">
+        
+        <button id="btn-volver" onclick="location.reload()">Reset</button>
+
+        <div class="grid-container">
+            <div class="grid-floor"></div>
+        </div>
+        
+        <div id="orbit-layer"></div>
+        
+        <div id="neon-text-container">
+            <h1 class="neon-text-base">Amor de mi vida</h1>
+        </div>
+
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN ---
+        
+        // Links de tus 7 imágenes (Asegúrate de usar links DIRECTOS de Postimages)
+        const imagenesUrls = [
+            "https://i.postimg.cc/wjw6wTZK/descargar-(5).jpg",
+            "https://i.postimg.cc/Mp9W9K4h/descargar-(6).jpg",
+            "https://i.postimg.cc/jSMsMd9p/descargar-(7).jpg",
+            "https://i.postimg.cc/HkYY07ZC/descargar-(8).jpg",
+            "https://i.postimg.cc/K80Z0vwF/Encuentra-el-regalo-hecho-a-mano-perfecto-prendas.jpg",
+            "https://i.postimg.cc/YCdpdqZK/Spider-man-and-hello-kitty.jpg",
+            "https://i.postimg.cc/Dwx2xyHh/ㅤ.jpg"
+        ];
+
+        // Tus frases románticas
+        const frasesTextos = [
+            "Te amo", "Eres mi todo", "Mi sol", "Siempre juntos", "Me encantas",
+            "Mi corazoncito", "Love you", "Te extraño", "Hacemos postrecito",
+            "Cantar solos", "Ver una peli""Te amo", "Eres mi todo", "Mi sol", "Siempre juntos", "Me encantas",
+            "Mi corazoncito", "Love you", "Te extraño", "Hacemos postrecito",
+            "Cantar solos", "Ver una peli""Te amo", "Eres mi todo", "Mi sol", "Siempre juntos", "Me encantas",
+            "Mi corazoncito", "Love you", "Te extraño", "Hacemos postrecito",
+            "Cantar solos", "Ver una peli""Te amo", "Eres mi todo", "Mi sol", "Siempre juntos", "Me encantas",
+            "Mi corazoncito", "Love you", "Te extraño", "Hacemos postrecito",
+            "Cantar solos", "Ver una peli"
+        ];
+
+        // Colores Neón
+        const coloresNeon = ["#ff00ff", "#00ffff", "#00ff00", "#ffff00", "#ff8000"];
+
+        // Parámetros de la órbita (ajusta según el tamaño de tu pantalla)
+        const radioOrbitaBase = 250; // Distancia base del centro (en px)
+        const velocidadBaseFrases = 0.005; // Velocidad de giro (más bajo = más lento)
+        const velocidadBaseImagenes = 0.003; // Velocidad de giro imágenes
+
+        const stage = document.getElementById('neon-stage');
+        const orbitLayer = document.getElementById('orbit-layer');
+        
+        // Guardar referencias a los elementos creados para la animación
+        const elementosOrbitantes = [];
+
+        // --- LÓGICA DE INICIO ---
+        window.onload = function() {
+            // Ya no hay portada, empezamos directo
+            crearElementosOrbitantes();
+            solicitarAnimacion();
+        };
+
+        // --- CREACIÓN DE ELEMENTOS ---
+        function crearElementosOrbitantes() {
+            // 1. Crear Imágenes (Dibujos) Orbitantes
+            imagenesUrls.forEach((url, index) => {
+                const charDiv = document.createElement('div');
+                charDiv.classList.add('character-orbit');
+                charDiv.style.width = (80 + Math.random() * 40) + 'px'; // Tamaños variados (80-120px)
+                
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `Personaje ${index}`;
+                
+                charDiv.appendChild(img);
+                orbitLayer.appendChild(charDiv);
+
+                // Configurar datos de órbita únicos
+                elementosOrbitantes.push({
+                    elemento: charDiv,
+                    tipo: 'imagen',
+                    angulo: Math.random() * Math.PI * 2, // Ángulo de inicio aleatorio
+                    velocidad: velocidadBaseImagenes * (0.3 + Math.random() * 0.4), // Velocidad variada
+                    radioX: radioOrbitaBase * (0.8 + Math.random() * 0.4), // Radio X variado
+                    radioY: (radioOrbitaBase / 2) * (0.8 + Math.random() * 0.4), // Radio Y más corto (órbita elíptica)
+                    desfaseY: (Math.random() - 0.5) * 100 // Pequeño desfase vertical
+                });
+            });
+
+            // 2. Crear Frases Pequeñas Orbitantes (Mejora: colores distintos)
+            frasesTextos.forEach((texto, index) => {
+                const span = document.createElement('span');
+                span.classList.add('phrase-orbit');
+                span.innerText = texto;
+                
+                // Color neón aleatorio
+                const color = coloresNeon[Math.floor(Math.random() * coloresNeon.length)];
+                span.style.color = color;
+                span.style.textShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+
+                orbitLayer.appendChild(span);
+
+                // Configurar datos de órbita únicos (más lejos y más rápido)
+                elementosOrbitantes.push({
+                    elemento: span,
+                    tipo: 'frase',
+                    angulo: Math.random() * Math.PI * 2,
+                    velocidad: velocidadBaseFrases * (0.3 + Math.random() * 0.4),
+                    radioX: (radioOrbitaBase + 100) * (0.9 + Math.random() * 0.3), // Más lejos del centro
+                    radioY: ((radioOrbitaBase + 100) / 2) * (0.9 + Math.random() * 0.3),
+                    desfaseY: (Math.random() - 0.2) * 150
+                });
+            });
+        }
+
+        // --- BUCLE DE ANIMACIÓN (Matemáticas 3D) ---
+        function solicitarAnimacion() {
+            animarOrbitas();
+            requestAnimationFrame(solicitarAnimacion);
+        }
+
+        function animarOrbitas() {
+            elementosOrbitantes.forEach(obj => {
+                // Actualizar ángulo (hacer girar)
+                obj.angulo += obj.velocidad;
+
+                // Calcular posición X e Y usando coseno y seno (Órbita Elíptica 3D)
+                // Math.cos(ángulo) nos da el movimiento horizontal (X)
+                // Math.sin(ángulo) nos da el movimiento vertical (Y)
+                const x = Math.cos(obj.angulo) * obj.radioX;
+                const y = Math.sin(obj.angulo) * obj.radioY + obj.desfaseY;
+
+                // Efecto de Profundidad (3D simulado):
+                // Usamos el seno del ángulo para cambiar el tamaño (z-index) y la escala.
+                // Cuando el seno es negativo (atrás), el objeto es más pequeño y está detrás.
+                // Cuando el seno es positivo (adelante), es más grande y está delante.
+                const factorZ = Math.sin(obj.angulo); 
+                const zIndex = 50 + Math.round(factorZ * 20); // z-index entre 30 y 70
+                const escalaZ = 1 + factorZ * 0.2; // Escala entre 0.8 y 1.2
+
+                // Aplicar transformaciones CSS
+                obj.elemento.style.zIndex = zIndex;
+                obj.elemento.style.transform = `translate(${x}px, ${y}px) scale(${escalaZ})`;
+
+                // Pequeño efecto de rotación adicional para las imágenes
+                if (obj.tipo === 'imagen') {
+                    // Girar ligeramente según la posición en X
+                    const rotacionX = -x * 0.015; // Inclinación
+                    obj.elemento.style.transform += ` rotate(${rotacionX}deg)`;
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
