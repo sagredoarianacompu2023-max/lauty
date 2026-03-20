@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Mi Amor ❤️</title>
+    <title>Amor Eterno ❤️</title>
     <style>
+        /* CSS GENERAL Y DE FONDO */
         :root {
             --neon-pink: #ff00ff;
             --neon-blue: #00ffff;
@@ -16,192 +17,102 @@
         body {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background-color: #000;
+            overflow: hidden; /* Evita barras de desplazamiento */
+            background-color: #000; /* Fondo negro profundo */
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            perspective: 1000px; /* Para efecto 3D en la cuadrícula */
         }
 
-        /* --- PORTADA --- */
-        #portada {
-            text-align: center;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .btn-retro {
-            background: rgba(255, 20, 147, 0.2);
-            border: 2px solid #ff1493;
-            color: #ff1493;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            border-radius: 50px;
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0 0 15px rgba(255, 20, 147, 0.4);
-        }
-
-        .btn-retro:hover {
-            background: #ff1493;
-            color: white;
-            box-shadow: 0 0 30px #ff1493;
-        }
-
-        /* --- ESCENARIO NEÓN --- */
+        /* --- ESCENARIO DE ANIMACIÓN (Ahora principal) --- */
         #neon-stage {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, #1a001a 0%, #000 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block; /* Visible por defecto */
         }
 
-        #neon-stage.active { display: block; }
-
+        /* Cuadrícula Retro (Fondo) */
         .grid-container {
             position: absolute;
-            width: 100%; height: 100%;
-            background: linear-gradient(0deg, rgba(0,255,255,0.1) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            perspective: 1000px;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0,255,255,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
 
         .grid-floor {
-            position: absolute; width: 200%; height: 100%; bottom: 0; left: -50%;
-            background: inherit; transform: rotateX(60deg); transform-origin: center bottom;
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            bottom: 0;
+            left: -50%;
+            background: inherit;
+            transform: rotateX(60deg);
+            transform-origin: center bottom;
         }
 
-        /* Texto Central */
+        /* El Texto Central (Fijo y Brillante) */
         #neon-text-container {
-            position: absolute; top: 55%; left: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 50; text-align: center; width: 100%;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            z-index: 100; /* Por encima de los elementos que orbitan */
+            pointer-events: none; /* No interfiere con clics */
         }
 
         .neon-text-base {
-            font-size: 3.5rem; font-weight: 900; text-transform: uppercase;
-            color: #fff; opacity: 0; transform: scale(0.3);
-            transition: 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            color: #fff;
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin: 0;
+            text-shadow: 0 0 10px #ff1493, 0 0 20px #ff1493, 0 0 30px #ff1493; /* Brillo rosa intenso */
         }
 
-        .expandir { opacity: 1; transform: scale(1); }
-
-        /* Frases y Dibujos */
-        .floating-phrase {
-            position: absolute; font-weight: bold; white-space: nowrap;
-            pointer-events: none; z-index: 40;
+        /* --- ELEMENTOS ORBITANTES (Imágenes y Frases) --- */
+        #orbit-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50; /* Por debajo del texto central */
         }
 
-        .character {
-            position: absolute; pointer-events: none; z-index: 60;
-            opacity: 0; transform: scale(0) rotate(-10deg);
-            transition: 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Estilos para las Imágenes (Dibujos) Orbitantes */
+        .character-orbit {
+            position: absolute;
+            transition: transform 0.05s linear; /* Movimiento suave */
+            pointer-events: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        .character img { width: 100%; height: auto; border-radius: 10px; }
-
-        .character.expandir-char { opacity: 1; transform: scale(1) rotate(0deg); }
-
-        #btn-volver {
-            position: absolute; top: 20px; left: 20px; z-index: 200;
-            padding: 10px 20px; background: none; border: 1px solid #fff;
-            color: #fff; cursor: pointer; opacity: 0.5;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="portada">
-        <h1 style="color: white; margin-bottom: 20px;">Haz clic aquí ❤️</h1>
-        <button class="btn-retro" onclick="abrirNeon()">Ver sorpresa</button>
-    </div>
-
-    <div id="neon-stage">
-        <button id="btn-volver" onclick="window.location.reload()">Volver</button>
-        <div class="grid-container"><div class="grid-floor"></div></div>
-        <div id="phrases-layer"></div>
-        <div id="chars-layer"></div>
-        <div id="neon-text-container">
-            <h1 class="neon-text-base" id="main-text">Amor de mi vida</h1>
-        </div>
-    </div>
-
-    <script>
-        const imagenes = [
-            "https://i.postimg.cc/wjw6wTZK/descargar-(5).jpg",
-            "https://i.postimg.cc/Mp9W9K4h/descargar-(6).jpg",
-            "https://i.postimg.cc/jSMsMd9p/descargar-(7).jpg",
-            "https://i.postimg.cc/HkYY07ZC/descargar-(8).jpg",
-            "https://i.postimg.cc/K80Z0vwF/Encuentra-el-regalo-hecho-a-mano-perfecto-prendas.jpg",
-            "https://i.postimg.cc/YCdpdqZK/Spider-man-and-hello-kitty.jpg",
-            "https://i.postimg.cc/Dwx2xyHh/ㅤ.jpg"
-        ];
-
-        const frases = ["Te amo", "Eres mi sol", "Mi palito bombón", "Siempre juntos", "Me encantas", "Mi vida entera", "Love you"];
-        const colores = ["#ff00ff", "#00ffff", "#00ff00", "#ffff00", "#ff8000"];
-
-        function abrirNeon() {
-            document.getElementById('portada').style.display = 'none';
-            const stage = document.getElementById('neon-stage');
-            stage.classList.add('active');
-
-            // 1. Expandir texto principal con color aleatorio
-            const mainText = document.getElementById('main-text');
-            const colorRandom = colores[Math.floor(Math.random() * colores.length)];
-            mainText.style.textShadow = `0 0 20px ${colorRandom}, 0 0 40px ${colorRandom}`;
-            setTimeout(() => mainText.classList.add('expandir'), 100);
-
-            // 2. Generar personajes que se expanden
-            imagenes.forEach((url, i) => {
-                setTimeout(() => {
-                    const char = document.createElement('div');
-                    char.className = 'character';
-                    char.style.width = (100 + Math.random() * 50) + "px";
-                    char.style.left = (10 + Math.random() * 70) + "%";
-                    char.style.top = (10 + Math.random() * 40) + "%";
-                    char.innerHTML = `<img src="${url}">`;
-                    document.getElementById('chars-layer').appendChild(char);
-                    setTimeout(() => char.classList.add('expandir-char'), 50);
-                }, i * 400);
-            });
-
-            // 3. Generar frases flotantes multicolores
-            setInterval(() => {
-                const phrase = document.createElement('div');
-                const color = colores[Math.floor(Math.random() * colores.length)];
-                phrase.className = 'floating-phrase';
-                phrase.innerText = frases[Math.floor(Math.random() * frases.length)];
-                phrase.style.color = color;
-                phrase.style.textShadow = `0 0 10px ${color}`;
-                phrase.style.left = Math.random() * 90 + "%";
-                phrase.style.top = "100%";
-                document.getElementById('phrases-layer').appendChild(phrase);
-
-                let pos = 100;
-                const anim = setInterval(() => {
-                    pos -= 0.5;
-                    phrase.style.top = pos + "%";
-                    if (pos < -10) {
-                        clearInterval(anim);
-                        phrase.remove();
-                    }
-                }, 20);
-            }, 800);
+        .character-orbit img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
-        // Efecto de movimiento sutil con el mouse
-        document.addEventListener('mousemove', (e) => {
-            const moveX = (e.clientX - window.innerWidth / 2) * 0.05;
-            const moveY = (e.clientY - window.innerHeight / 2) * 0.05;
-            document.getElementById('chars-layer').style.transform = `translate(${moveX}px, ${moveY}px)`;
-        });
-    </script>
-</body>
-</html>
+        /* Estilos para las Frases Pequeñas Orbitantes */
+        .phrase-orbit {
+            position: absolute;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Brillo base */
+            white-space: nowrap
