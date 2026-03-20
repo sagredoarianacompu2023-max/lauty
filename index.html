@@ -7,8 +7,8 @@
     <style>
         :root {
             --neon-pink: #ff00ff;
-            --neon-blue: #00ffff;
             --pink-bg: #ffccff;
+            --darks pink: #d81b60;
         }
 
         body {
@@ -19,58 +19,104 @@
         }
 
         /* --- PORTADA --- */
-        #portada { text-align: center; z-index: 100; display: block; }
-        .portada-title { color: #d81b60; font-size: 2.5rem; margin-bottom: 40px; text-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        #portada { 
+            text-align: center; 
+            z-index: 500; /* Número muy alto para que esté arriba de todo */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .portada-title { 
+            color: #d81b60; 
+            font-size: 2.5rem; 
+            margin-bottom: 40px; 
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.1); 
+        }
         
         .btn-retro {
-            background: white; border: 2px solid #d81b60; color: #d81b60;
-            padding: 15px 30px; font-size: 1.1rem; margin: 10px; cursor: pointer;
-            border-radius: 50px; font-weight: bold; transition: 0.3s;
+            background: white; 
+            border: 2px solid #d81b60; 
+            color: #d81b60;
+            padding: 15px 35px; 
+            font-size: 1.1rem; 
+            margin: 10px; 
+            cursor: pointer;
+            border-radius: 50px; 
+            font-weight: bold; 
+            transition: 0.3s;
             box-shadow: 0 4px #c2185b;
+            position: relative;
+            z-index: 501; /* Asegura que el botón sea cliqueable */
+            width: 200px;
         }
-        .btn-retro:hover { background: #d81b60; color: white; transform: translateY(-3px); }
+        
+        .btn-retro:hover { 
+            background: #d81b60; 
+            color: white; 
+            transform: translateY(-3px); 
+            box-shadow: 0 6px #c2185b;
+        }
+
+        .btn-retro:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px #c2185b;
+        }
 
         /* --- CARTA --- */
         #carta {
-            display: none; background: white; padding: 30px; width: 85%; max-width: 500px;
-            border-radius: 20px; border: 3px solid #f48fb1; text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 101;
+            display: none; 
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white; 
+            padding: 30px; 
+            width: 85%; 
+            max-width: 450px;
+            border-radius: 20px; 
+            border: 3px solid #f48fb1; 
+            text-align: center;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3); 
+            z-index: 600;
         }
-        #carta.active { display: block; }
 
         /* --- ESCENARIO NEÓN --- */
         #neon-stage {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000; z-index: 150;
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000; 
+            z-index: 100; /* Por debajo de la portada y carta al inicio */
         }
-        #neon-stage.active { display: block; }
 
         .grid-container {
             position: absolute; width: 100%; height: 100%;
             background: linear-gradient(0deg, rgba(0,255,255,0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
+                        linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px);
             background-size: 40px 40px;
         }
 
-        /* Texto Central */
         #neon-text-container {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 200; text-align: center; width: 100%; pointer-events: none;
         }
+        
         .neon-text-base {
             color: #fff; font-size: 3rem; text-transform: uppercase; font-weight: 900;
-            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+            text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink);
+            margin: 0;
         }
 
-        /* Elementos que orbitan */
         .orbit-item { position: absolute; pointer-events: none; }
-        .character-orbit img { border-radius: 10px; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
-        .phrase-orbit { font-weight: bold; white-space: nowrap; }
+        .character-orbit img { border-radius: 10px; width: 100px; height: auto; }
 
         #btn-volver {
-            position: absolute; top: 20px; right: 20px; z-index: 300;
-            padding: 10px; background: none; border: 1px solid var(--neon-pink);
-            color: var(--neon-pink); cursor: pointer;
+            position: absolute; top: 20px; right: 20px; z-index: 700;
+            padding: 10px 20px; background: rgba(255, 0, 255, 0.1); 
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink); cursor: pointer; border-radius: 5px;
         }
     </style>
 </head>
@@ -85,7 +131,7 @@
     <div id="carta">
         <h2 style="color: #d81b60;">Hola mi vida ❤️</h2>
         <p>Hice esto para recordarte lo mucho que te amo. Eres la persona más especial y quiero que siempre tengas este rinconcito para sonreír.</p>
-        <button class="btn-retro" style="font-size: 0.9rem;" onclick="cerrarTodo()">Cerrar</button>
+        <button class="btn-retro" style="font-size: 0.9rem; width: 150px;" onclick="cerrarTodo()">Cerrar</button>
     </div>
 
     <div id="neon-stage">
@@ -107,23 +153,22 @@
             "https://i.postimg.cc/YCdpdqZK/Spider-man-and-hello-kitty.jpg",
             "https://i.postimg.cc/Dwx2xyHh/ㅤ.jpg"
         ];
-        const frases = ["Te amo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo"];
-        const frases = ["Te amo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo"];
-        const frases = ["Te amo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo"];
-        const frases = ["Te amo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo"];
+        const frases = ["Te amo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo"];
         const colores = ["#ff00ff", "#00ffff", "#00ff00", "#ffff00", "#ff8000"];
 
         let elementos = [];
         let animando = false;
 
         function abrirCarta() {
-            document.getElementById('portada').style.display = 'none';
-            document.getElementById('carta').classList.add('active');
+            document.getElementById('portada').style.visibility = 'hidden';
+            document.getElementById('carta').style.display = 'block';
         }
 
         function abrirNeon() {
             document.getElementById('portada').style.display = 'none';
-            document.getElementById('neon-stage').classList.add('active');
+            const stage = document.getElementById('neon-stage');
+            stage.style.display = 'block';
+            
             if (!animando) {
                 crearOrbitas();
                 loop();
@@ -132,27 +177,30 @@
         }
 
         function cerrarTodo() {
-            location.reload(); // La forma más limpia de resetear todo
+            // Recargar la página limpia todo y vuelve al inicio
+            window.location.reload();
         }
 
         function crearOrbitas() {
             const layer = document.getElementById('orbit-layer');
+            layer.innerHTML = ""; // Limpiar por si acaso
             
-            // Crear imágenes orbitantes
+            // Imágenes
             imagenes.forEach((url, i) => {
                 const div = document.createElement('div');
                 div.className = 'orbit-item character-orbit';
-                div.innerHTML = `<img src="${url}" style="width:100px;">`;
+                div.innerHTML = `<img src="${url}">`;
                 layer.appendChild(div);
                 elementos.push({
                     el: div,
                     angulo: (i * (Math.PI * 2 / imagenes.length)),
-                    radioX: 250, radioY: 120,
-                    vel: 0.005, tipo: 'img'
+                    radioX: window.innerWidth < 600 ? 150 : 280, 
+                    radioY: window.innerWidth < 600 ? 80 : 130,
+                    vel: 0.006, tipo: 'img'
                 });
             });
 
-            // Crear frases orbitantes
+            // Frases
             frases.forEach((txt, i) => {
                 const span = document.createElement('span');
                 span.className = 'orbit-item phrase-orbit';
@@ -164,8 +212,9 @@
                 elementos.push({
                     el: span,
                     angulo: (i * (Math.PI * 2 / frases.length)) + 0.5,
-                    radioX: 350, radioY: 180,
-                    vel: 0.008, tipo: 'txt'
+                    radioX: window.innerWidth < 600 ? 200 : 380, 
+                    radioY: window.innerWidth < 600 ? 120 : 200,
+                    vel: 0.009, tipo: 'txt'
                 });
             });
         }
@@ -175,10 +224,13 @@
                 obj.angulo += obj.vel;
                 const x = Math.cos(obj.angulo) * obj.radioX;
                 const y = Math.sin(obj.angulo) * obj.radioY;
-                const s = 0.5 + (Math.sin(obj.angulo) + 1) * 0.25; // Efecto de tamaño 3D
+                
+                // Efecto 3D de escala (más grande adelante, más chico atrás)
+                const s = 0.6 + (Math.sin(obj.angulo) + 1) * 0.3; 
                 
                 obj.el.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
                 obj.el.style.zIndex = Math.round(s * 100);
+                obj.el.style.opacity = 0.4 + (Math.sin(obj.angulo) + 1) * 0.3;
             });
             requestAnimationFrame(loop);
         }
