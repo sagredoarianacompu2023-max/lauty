@@ -3,168 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amor Eterno ❤️</title>
+    <title>Para Mi Amor ❤️</title>
     <style>
-        /* CSS GENERAL Y DE FONDO */
         :root {
             --neon-pink: #ff00ff;
             --neon-blue: #00ffff;
-            --neon-green: #00ff00;
-            --neon-yellow: #ffff00;
-            --neon-orange: #ff8000;
+            --pink-bg: #ffccff;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Evita barras de desplazamiento */
-            background-color: #000; /* Fondo negro profundo */
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px; /* Para efecto 3D en la cuadrícula */
+            margin: 0; padding: 0; overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--pink-bg);
+            height: 100vh; display: flex; justify-content: center; align-items: center;
         }
 
-        /* --- ESCENARIO DE ANIMACIÓN (Ahora principal) --- */
+        /* --- PORTADA --- */
+        #portada { text-align: center; z-index: 100; display: block; }
+        .portada-title { color: #d81b60; font-size: 2.5rem; margin-bottom: 40px; text-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        
+        .btn-retro {
+            background: white; border: 2px solid #d81b60; color: #d81b60;
+            padding: 15px 30px; font-size: 1.1rem; margin: 10px; cursor: pointer;
+            border-radius: 50px; font-weight: bold; transition: 0.3s;
+            box-shadow: 0 4px #c2185b;
+        }
+        .btn-retro:hover { background: #d81b60; color: white; transform: translateY(-3px); }
+
+        /* --- CARTA --- */
+        #carta {
+            display: none; background: white; padding: 30px; width: 85%; max-width: 500px;
+            border-radius: 20px; border: 3px solid #f48fb1; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 101;
+        }
+        #carta.active { display: block; }
+
+        /* --- ESCENARIO NEÓN --- */
         #neon-stage {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: block; /* Visible por defecto */
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000; z-index: 150;
         }
+        #neon-stage.active { display: block; }
 
-        /* Cuadrícula Retro (Fondo) */
         .grid-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            position: absolute; width: 100%; height: 100%;
             background: linear-gradient(0deg, rgba(0,255,255,0.05) 1px, transparent 1px),
                         linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
             background-size: 40px 40px;
         }
 
-        .grid-floor {
-            position: absolute;
-            width: 200%;
-            height: 100%;
-            bottom: 0;
-            left: -50%;
-            background: inherit;
-            transform: rotateX(60deg);
-            transform-origin: center bottom;
-        }
-
-        /* El Texto Central (Fijo y Brillante) */
+        /* Texto Central */
         #neon-text-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            z-index: 100; /* Por encima de los elementos que orbitan */
-            pointer-events: none; /* No interfiere con clics */
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 200; text-align: center; width: 100%; pointer-events: none;
         }
-
         .neon-text-base {
-            color: #fff;
-            font-size: 3.5rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin: 0;
-            text-shadow: 0 0 10px #ff1493, 0 0 20px #ff1493, 0 0 30px #ff1493; /* Brillo rosa intenso */
+            color: #fff; font-size: 3rem; text-transform: uppercase; font-weight: 900;
+            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
         }
 
-        /* --- ELEMENTOS ORBITANTES (Imágenes y Frases) --- */
-        #orbit-layer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 50; /* Por debajo del texto central */
-        }
+        /* Elementos que orbitan */
+        .orbit-item { position: absolute; pointer-events: none; }
+        .character-orbit img { border-radius: 10px; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
+        .phrase-orbit { font-weight: bold; white-space: nowrap; }
 
-        /* Estilos para las Imágenes (Dibujos) Orbitantes */
-        .character-orbit {
-            position: absolute;
-            transition: transform 0.05s linear; /* Movimiento suave */
-            pointer-events: none;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-
-        .character-orbit img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Estilos para las Frases Pequeñas Orbitantes */
-        .phrase-orbit {
-            position: absolute;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Brillo base */
-            white-space: nowrap; /* Evita que el texto se parta */
-            pointer-events: none;
-        }
-
-        /* Botón "Volver" (Opcional, si quieres salir de la animación) */
         #btn-volver {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 15px;
-            background-color: rgba(255, 20, 147, 0.1);
-            color: #ff1493;
-            border: 1px solid #ff1493;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 200;
-            opacity: 0.6;
-            transition: 0.3s;
+            position: absolute; top: 20px; right: 20px; z-index: 300;
+            padding: 10px; background: none; border: 1px solid var(--neon-pink);
+            color: var(--neon-pink); cursor: pointer;
         }
-        #btn-volver:hover {
-            opacity: 1;
-            background-color: #ff1493;
-            color: white;
-        }
-
     </style>
 </head>
 <body>
 
-    <div id="neon-stage">
-        
-        <button id="btn-volver" onclick="location.reload()">Reset</button>
+    <div id="portada">
+        <h1 class="portada-title">Para Mi Amor ❤️</h1>
+        <button class="btn-retro" onclick="abrirCarta()">Una Carta</button>
+        <button class="btn-retro" onclick="abrirNeon()">Imagen 3D</button>
+    </div>
 
-        <div class="grid-container">
-            <div class="grid-floor"></div>
-        </div>
-        
-        <div id="orbit-layer"></div>
-        
+    <div id="carta">
+        <h2 style="color: #d81b60;">Hola mi vida ❤️</h2>
+        <p>Hice esto para recordarte lo mucho que te amo. Eres la persona más especial y quiero que siempre tengas este rinconcito para sonreír.</p>
+        <button class="btn-retro" style="font-size: 0.9rem;" onclick="cerrarTodo()">Cerrar</button>
+    </div>
+
+    <div id="neon-stage">
+        <button id="btn-volver" onclick="cerrarTodo()">Volver</button>
+        <div class="grid-container"></div>
+        <div id="orbit-layer" style="position:relative; width:100%; height:100%; display:flex; justify-content:center; align-items:center;"></div>
         <div id="neon-text-container">
             <h1 class="neon-text-base">Amor de mi vida</h1>
         </div>
-
     </div>
 
     <script>
-        // --- CONFIGURACIÓN ---
-        
-        // Links de tus 7 imágenes (Asegúrate de usar links DIRECTOS de Postimages)
-        const imagenesUrls = [
+        const imagenes = [
             "https://i.postimg.cc/wjw6wTZK/descargar-(5).jpg",
             "https://i.postimg.cc/Mp9W9K4h/descargar-(6).jpg",
             "https://i.postimg.cc/jSMsMd9p/descargar-(7).jpg",
@@ -173,132 +107,81 @@
             "https://i.postimg.cc/YCdpdqZK/Spider-man-and-hello-kitty.jpg",
             "https://i.postimg.cc/Dwx2xyHh/ㅤ.jpg"
         ];
+        const frases = ["Te amo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo"];
+        const frases = ["Te amo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo"];
+        const frases = ["Te amo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo"];
+        const frases = ["Te amo", "Eres mi sol", "Mi vida", "Siempre juntos", "Me encantas", "Love you", "Mi todo"];
+        const colores = ["#ff00ff", "#00ffff", "#00ff00", "#ffff00", "#ff8000"];
 
-        // Tus frases románticas
-        const frasesTextos = [
-            "Te amo", "Eres mi todo", "Mi sol", "Siempre juntos", "Me encantas",
-            "Mi corazoncito", "Love you", "Te extraño", "Hacemos postrecito",
-            "Cantar solos", "Ver una peli""Te amo", "Eres mi todo", "Mi sol", "Siempre juntos", "Me encantas",
-            "Mi corazoncito", "Love you", "Te extraño", "Hacemos postrecito",
-            "Cantar solos", "Ver una peli""Te amo", "Eres mi todo", "Mi sol", "Siempre juntos", "Me encantas",
-            "Mi corazoncito", "Love you", "Te extraño", "Hacemos postrecito",
-            "Cantar solos", "Ver una peli""Te amo", "Eres mi todo", "Mi sol", "Siempre juntos", "Me encantas",
-            "Mi corazoncito", "Love you", "Te extraño", "Hacemos postrecito",
-            "Cantar solos", "Ver una peli"
-        ];
+        let elementos = [];
+        let animando = false;
 
-        // Colores Neón
-        const coloresNeon = ["#ff00ff", "#00ffff", "#00ff00", "#ffff00", "#ff8000"];
+        function abrirCarta() {
+            document.getElementById('portada').style.display = 'none';
+            document.getElementById('carta').classList.add('active');
+        }
 
-        // Parámetros de la órbita (ajusta según el tamaño de tu pantalla)
-        const radioOrbitaBase = 250; // Distancia base del centro (en px)
-        const velocidadBaseFrases = 0.005; // Velocidad de giro (más bajo = más lento)
-        const velocidadBaseImagenes = 0.003; // Velocidad de giro imágenes
+        function abrirNeon() {
+            document.getElementById('portada').style.display = 'none';
+            document.getElementById('neon-stage').classList.add('active');
+            if (!animando) {
+                crearOrbitas();
+                loop();
+                animando = true;
+            }
+        }
 
-        const stage = document.getElementById('neon-stage');
-        const orbitLayer = document.getElementById('orbit-layer');
-        
-        // Guardar referencias a los elementos creados para la animación
-        const elementosOrbitantes = [];
+        function cerrarTodo() {
+            location.reload(); // La forma más limpia de resetear todo
+        }
 
-        // --- LÓGICA DE INICIO ---
-        window.onload = function() {
-            // Ya no hay portada, empezamos directo
-            crearElementosOrbitantes();
-            solicitarAnimacion();
-        };
-
-        // --- CREACIÓN DE ELEMENTOS ---
-        function crearElementosOrbitantes() {
-            // 1. Crear Imágenes (Dibujos) Orbitantes
-            imagenesUrls.forEach((url, index) => {
-                const charDiv = document.createElement('div');
-                charDiv.classList.add('character-orbit');
-                charDiv.style.width = (80 + Math.random() * 40) + 'px'; // Tamaños variados (80-120px)
-                
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = `Personaje ${index}`;
-                
-                charDiv.appendChild(img);
-                orbitLayer.appendChild(charDiv);
-
-                // Configurar datos de órbita únicos
-                elementosOrbitantes.push({
-                    elemento: charDiv,
-                    tipo: 'imagen',
-                    angulo: Math.random() * Math.PI * 2, // Ángulo de inicio aleatorio
-                    velocidad: velocidadBaseImagenes * (0.3 + Math.random() * 0.4), // Velocidad variada
-                    radioX: radioOrbitaBase * (0.8 + Math.random() * 0.4), // Radio X variado
-                    radioY: (radioOrbitaBase / 2) * (0.8 + Math.random() * 0.4), // Radio Y más corto (órbita elíptica)
-                    desfaseY: (Math.random() - 0.5) * 100 // Pequeño desfase vertical
+        function crearOrbitas() {
+            const layer = document.getElementById('orbit-layer');
+            
+            // Crear imágenes orbitantes
+            imagenes.forEach((url, i) => {
+                const div = document.createElement('div');
+                div.className = 'orbit-item character-orbit';
+                div.innerHTML = `<img src="${url}" style="width:100px;">`;
+                layer.appendChild(div);
+                elementos.push({
+                    el: div,
+                    angulo: (i * (Math.PI * 2 / imagenes.length)),
+                    radioX: 250, radioY: 120,
+                    vel: 0.005, tipo: 'img'
                 });
             });
 
-            // 2. Crear Frases Pequeñas Orbitantes (Mejora: colores distintos)
-            frasesTextos.forEach((texto, index) => {
+            // Crear frases orbitantes
+            frases.forEach((txt, i) => {
                 const span = document.createElement('span');
-                span.classList.add('phrase-orbit');
-                span.innerText = texto;
-                
-                // Color neón aleatorio
-                const color = coloresNeon[Math.floor(Math.random() * coloresNeon.length)];
-                span.style.color = color;
-                span.style.textShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
-
-                orbitLayer.appendChild(span);
-
-                // Configurar datos de órbita únicos (más lejos y más rápido)
-                elementosOrbitantes.push({
-                    elemento: span,
-                    tipo: 'frase',
-                    angulo: Math.random() * Math.PI * 2,
-                    velocidad: velocidadBaseFrases * (0.3 + Math.random() * 0.4),
-                    radioX: (radioOrbitaBase + 100) * (0.9 + Math.random() * 0.3), // Más lejos del centro
-                    radioY: ((radioOrbitaBase + 100) / 2) * (0.9 + Math.random() * 0.3),
-                    desfaseY: (Math.random() - 0.2) * 150
+                span.className = 'orbit-item phrase-orbit';
+                span.innerText = txt;
+                const col = colores[Math.floor(Math.random()*colores.length)];
+                span.style.color = col;
+                span.style.textShadow = `0 0 10px ${col}`;
+                layer.appendChild(span);
+                elementos.push({
+                    el: span,
+                    angulo: (i * (Math.PI * 2 / frases.length)) + 0.5,
+                    radioX: 350, radioY: 180,
+                    vel: 0.008, tipo: 'txt'
                 });
             });
         }
 
-        // --- BUCLE DE ANIMACIÓN (Matemáticas 3D) ---
-        function solicitarAnimacion() {
-            animarOrbitas();
-            requestAnimationFrame(solicitarAnimacion);
-        }
-
-        function animarOrbitas() {
-            elementosOrbitantes.forEach(obj => {
-                // Actualizar ángulo (hacer girar)
-                obj.angulo += obj.velocidad;
-
-                // Calcular posición X e Y usando coseno y seno (Órbita Elíptica 3D)
-                // Math.cos(ángulo) nos da el movimiento horizontal (X)
-                // Math.sin(ángulo) nos da el movimiento vertical (Y)
+        function loop() {
+            elementos.forEach(obj => {
+                obj.angulo += obj.vel;
                 const x = Math.cos(obj.angulo) * obj.radioX;
-                const y = Math.sin(obj.angulo) * obj.radioY + obj.desfaseY;
-
-                // Efecto de Profundidad (3D simulado):
-                // Usamos el seno del ángulo para cambiar el tamaño (z-index) y la escala.
-                // Cuando el seno es negativo (atrás), el objeto es más pequeño y está detrás.
-                // Cuando el seno es positivo (adelante), es más grande y está delante.
-                const factorZ = Math.sin(obj.angulo); 
-                const zIndex = 50 + Math.round(factorZ * 20); // z-index entre 30 y 70
-                const escalaZ = 1 + factorZ * 0.2; // Escala entre 0.8 y 1.2
-
-                // Aplicar transformaciones CSS
-                obj.elemento.style.zIndex = zIndex;
-                obj.elemento.style.transform = `translate(${x}px, ${y}px) scale(${escalaZ})`;
-
-                // Pequeño efecto de rotación adicional para las imágenes
-                if (obj.tipo === 'imagen') {
-                    // Girar ligeramente según la posición en X
-                    const rotacionX = -x * 0.015; // Inclinación
-                    obj.elemento.style.transform += ` rotate(${rotacionX}deg)`;
-                }
+                const y = Math.sin(obj.angulo) * obj.radioY;
+                const s = 0.5 + (Math.sin(obj.angulo) + 1) * 0.25; // Efecto de tamaño 3D
+                
+                obj.el.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+                obj.el.style.zIndex = Math.round(s * 100);
             });
+            requestAnimationFrame(loop);
         }
-
     </script>
 </body>
 </html>
