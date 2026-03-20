@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Mi Amor ❤️</title>
+    <title>Para Mi Amor 💖</title>
     <style>
         /* CSS GENERAL Y DE PORTADA */
         :root {
             --neon-pink: #ff00ff;
             --neon-blue: #00ffff;
-            --pink-bg: #ffccff; /* Color sólido de respaldo si no carga el GIF */
+            --neon-green: #00ff00;
+            --neon-yellow: #ffff00;
+            --neon-orange: #ff8000;
+            --pink-bg: #ffccff; /* Color de respaldo si no carga el fondo */
         }
 
         body {
@@ -27,10 +30,11 @@
             transition: background 0.5s;
         }
 
-        /* --- SECCIÓN PORTADA --- */
+        /* --- SECCIÓN PORTADA (Inicio) --- */
         #portada {
             text-align: center;
             display: block;
+            z-index: 5;
         }
 
         .portada-title {
@@ -96,7 +100,7 @@
             font-size: 1.1rem;
         }
 
-        /* --- SECCIÓN IMAGEN 3D / NEÓN (RECREACIÓN IMAGEN 2) --- */
+        /* --- SECCIÓN ESCENARIO NEÓN (Actualizada con mejoras) --- */
         #neon-stage {
             display: none;
             position: fixed;
@@ -135,12 +139,77 @@
             transform-origin: center bottom;
         }
 
-        /* Personajes Flotando */
+        /* El Texto Central Neón Expandiéndose (Actualizado para usar colores aleatorios) */
+        #neon-text-container {
+            position: absolute;
+            top: 50%; /* Centrado verticalmente */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            text-align: center;
+            font-family: sans-serif; /* Usamos una fuente sin serifa gruesa */
+            z-index: 10;
+        }
+
+        .neon-text-base {
+            color: #fff;
+            font-size: 3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin: 0;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 1s, transform 1s, text-shadow 1s;
+        }
+
+        /* Clase para activar la expansión */
+        .expandir {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- MEJORA 2: Frases Románticas Flotantes --- */
+        #floating-phrases-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* No interfieren con clics */
+            overflow: hidden;
+            z-index: 8; /* Entre la cuadrícula y el texto central */
+        }
+
+        .floating-phrase {
+            position: absolute;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Brillo base */
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* --- MEJORA 3: Personajes que se Expandirán --- */
+        #characters-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 12; /* Por encima de todo */
+        }
+
         .character {
             position: absolute;
-            z-index: 5;
-            transition: transform 0.1s ease-out;
-            pointer-events: none; /* No interfieren con clics */
+            transition: transform 0.1s ease-out, scale 1s;
+            pointer-events: none;
+            
+            /* Para el efecto de expansión inicial */
+            transform: scale(0);
+            opacity: 0;
         }
 
         .character img {
@@ -148,44 +217,8 @@
             height: auto;
         }
 
-        /* Partículas Neón */
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background-color: var(--neon-blue);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--neon-blue);
-            opacity: 0.8;
-            pointer-events: none;
-        }
-
-        /* El Texto Neón Expandiéndose */
-        #neon-text-container {
-            position: absolute;
-            top: 60%; /* Posición abajo como en la imagen */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            text-align: center;
-            font-family: 'Te Amo', sans-serif; /* Usamos una fuente pixelada para dar el efecto retro */
-            z-index: 10;
-        }
-
-        .neon-text {
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink);
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin: 0;
-            opacity: 0;
-            transform: scale(0.5);
-            transition: opacity 1s, transform 1s;
-        }
-
-        /* Clase para activar la expansión */
-        .expandir {
+        /* Clase para activar la expansión del personaje */
+        .character.expandir {
             opacity: 1;
             transform: scale(1);
         }
@@ -200,6 +233,8 @@
             border: 1px solid var(--neon-pink);
             z-index: 20;
             box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
+            font-size: 1rem;
+            padding: 10px 20px;
         }
 
     </style>
@@ -209,7 +244,7 @@
     <div id="portada">
         <h1 class="portada-title">Para Mi Amor ❤️</h1>
         <button class="btn-retro" onclick="abrirCarta()">Una Carta</button>
-        <button class="btn-retro" onclick="abrirNeon()">Imagen 3D</button>
+        <button class="btn-retro" onclick="abrirNeon()">Imagen 3D Neón</button>
     </div>
 
     <div id="carta">
@@ -227,32 +262,53 @@
             <div class="grid-floor"></div>
         </div>
         
+        <div id="floating-phrases-container"></div>
+        
         <div id="characters-container"></div>
         
         <div id="neon-text-container">
-            <h1 class="neon-text">Amor de mi vida</h1>
+            <h1 class="neon-text-base">Amor de mi vida</h1>
         </div>
 
         <button class="btn-retro" id="btn-regresar" onclick="regresarAPortada()">Volver</button>
     </div>
 
     <script>
-        // --- CONFIGURACIÓN DE LINKS DE IMÁGENES ---
-        // Reemplaza estos links por tus propias imágenes de Postimages (Direct Link).
-        const gifCorazonesUrl = 'https://i.postimg.cc/mD8zWbKq/pink-hearts.gif'; // Un GIF de corazones rosas para el fondo de la portada.
-        const personajes1Url = 'https://i.postimg.cc/85z11jH7/mc-day-bg.jpg'; // Imagen de Spiderman (arriba center).
-        const personajes2Url = 'https://i.postimg.cc/W34L2F74/mc-sunset-bg.jpg'; // Imagen de Hello Kitty (derecha center).
-        const personajes3Url = 'https://i.postimg.cc/mD3f44R0/mc-cave-bg.jpg'; // Imagen de Spiderman colgando (izquierda bot).
+        // --- CONFIGURACIÓN DE LINKS DE IMÁGENES (Usa tus links de Postimages) ---
+        // Te recomiendo usar imágenes .png con fondo transparente.
+        const spiderman1Url = 'https://i.postimg.cc/85z11jH7/mc-day-bg.jpg'; // Spiderman arriba center (cambia por tu link PNG)
+        const kittyUrl = 'https://i.postimg.cc/W34L2F74/mc-sunset-bg.jpg';      // Hello Kitty derecha center (cambia por tu link PNG)
+        const spiderman2Url = 'https://i.postimg.cc/mD3f44R0/mc-cave-bg.jpg'; // Spiderman colgando izquierda bot (cambia por tu link PNG)
+        const gifCorazonesUrl = 'https://i.postimg.cc/mD8zWbKq/pink-hearts.gif'; // GIF de corazones rosas para el fondo de portada.
+
+        // --- LISTA DE FRASES ROMÁNTICAS FLOTANTES (Mejora 2) ---
+        const listaFrasesRomanticas = [
+            "Te amo", "Eres mi todo", "Mi vida", "Mi sol", "Mi amor eterno",
+            "Siempre juntos", "Me haces feliz", "Te extraño", "Mi corazoncito",
+            "La más bella", "Mi palito bombón"
+        ];
+
+        // --- COLORES NEÓN (Mejora 2) ---
+        const coloresNeon = [
+            "#ff00ff", // rosa
+            "#00ffff", // azul
+            "#00ff00", // verde
+            "#ffff00", // amarillo
+            "#ff8000"  // naranja
+        ];
 
         // --- LÓGICA GENERAL DE NAVEGACIÓN ---
         function abrirCarta() {
             document.getElementById('portada').style.display = 'none';
             document.getElementById('carta').classList.add('active');
+            document.body.style.backgroundImage = 'none';
         }
 
         function abrirNeon() {
             document.getElementById('portada').style.display = 'none';
             document.getElementById('neon-stage').classList.add('active');
+            // Cargar fondo solo para neón
+            document.body.style.backgroundImage = `url(${gifCorazonesUrl})`;
             
             // Iniciar animaciones neón
             iniciarEfectosNeon();
@@ -262,135 +318,149 @@
             document.getElementById('carta').classList.remove('active');
             document.getElementById('neon-stage').classList.remove('active');
             document.getElementById('portada').style.display = 'block';
-            
-            // Detener efectos de neón para ahorrar recursos
             detenerEfectosNeon();
-        }
-
-        // --- LÓGICA DE LOS EFECTOS NEÓN ---
-        let neonTimers = []; // Para detener las animaciones
-
-        function iniciarEfectosNeon() {
-            // 1. Cargar el GIF de fondo en el body solo para la portada
-            document.body.style.backgroundImage = `url(${gifCorazonesUrl})`;
-
-            // 2. Cargar personajes y texto
-            cargarPersonajes();
-            cargarTextoNeon();
-            iniciarParticulas();
-            iniciarMovimientoPersonajes();
-        }
-
-        function detenerEfectosNeon() {
-            // Detener timers
-            neonTimers.forEach(timer => clearInterval(timer));
-            neonTimers = [];
-
-            // Limpiar contenedores
-            document.getElementById('characters-container').innerHTML = '';
-            document.getElementById('neon-text-container').innerHTML = ''; // Limpiar el texto para que se vuelva a expandir
-            
-            // Restaurar fondo
             document.body.style.backgroundImage = 'none';
         }
 
-        function cargarPersonajes() {
-            const container = document.getElementById('characters-container');
-            const personajes = [
-                { url: personajes1Url, size: 80, pos: { top: '30%', left: '50%' }, target: { top: 30, left: 50 } }, // Spiderman arriba
-                { url: personajes2Url, size: 70, pos: { top: '50%', left: '70%' }, target: { top: 50, left: 70 } }, // Hello Kitty derecha
-                { url: personajes3Url, size: 90, pos: { top: '70%', left: '30%' }, target: { top: 70, left: 30 } }, // Spiderman colgando izquierda
-            ];
+        // --- LÓGICA DE LOS EFECTOS NEÓN ---
+        let neonTimers = []; 
 
-            personajes.forEach((p, index) => {
-                const char = document.createElement('div');
-                char.classList.add('character');
-                char.id = `char-${index}`;
-                char.style.width = `${p.size}px`;
-                char.style.top = p.pos.top;
-                char.style.left = p.pos.left;
-                
-                const img = document.createElement('img');
-                img.src = p.url;
-                img.alt = `Personaje ${index}`;
-                
-                char.appendChild(img);
-                container.appendChild(char);
+        function iniciarEfectosNeon() {
+            // Limpiar timers anteriores
+            detenerEfectosNeon();
 
-                // Guardar posición objetivo para el movimiento del mouse
-                char.dataset.targetX = p.target.left;
-                char.dataset.targetY = p.target.top;
-            });
+            // 1. Cargar y animar texto central (con color aleatorio)
+            cargarTextoNeonCentral();
+
+            // 2. Cargar y animar personajes (se expandirán)
+            cargarPersonajesQueSeExpandirán();
+
+            // 3. Iniciar frases románticas flotantes (Mejora 2)
+            iniciarFrasesFlotantes();
+
+            // 4. Iniciar movimiento sutil con el mouse
+            iniciarMovimientoPersonajesConMouse();
         }
 
-        // Cargar y animar el texto neón
-        function cargarTextoNeon() {
+        function detenerEfectosNeon() {
+            neonTimers.forEach(timer => clearInterval(timer));
+            neonTimers = [];
+            document.getElementById('characters-container').innerHTML = '';
+            document.getElementById('neon-text-container').innerHTML = '';
+            document.getElementById('floating-phrases-container').innerHTML = '';
+        }
+
+        // --- MEJORA 1: Cargar Texto Central con Color Aleatorio ---
+        function cargarTextoNeonCentral() {
             const container = document.getElementById('neon-text-container');
-            container.innerHTML = ''; // Limpiar
+            container.innerHTML = ''; 
 
             const h1 = document.createElement('h1');
-            h1.classList.add('neon-text');
+            h1.classList.add('neon-text-base');
             h1.innerText = 'Amor de mi vida';
+            
+            // Elegir color aleatorio
+            const color = coloresNeon[Math.floor(Math.random() * coloresNeon.length)];
+            
+            // Aplicar sombra neón con ese color
+            h1.style.textShadow = `0 0 10px ${color}, 0 0 20px ${color}, 0 0 30px ${color}`;
+
             container.appendChild(h1);
 
-            // Iniciar expansión después de un pequeño retraso
+            // Iniciar expansión después de un retraso
             setTimeout(() => {
                 h1.classList.add('expandir');
             }, 500);
         }
 
-        // Partículas neón flotando
-        function iniciarParticulas() {
-            const container = document.getElementById('neon-stage');
+        // --- MEJORA 3: Cargar Personajes que se Expandirán al aparecer ---
+        function cargarPersonajesQueSeExpandirán() {
+            const container = document.getElementById('characters-container');
+            const personajes = [
+                { url: spiderman1Url, size: 80, targetPos: { top: '30%', left: '50%' } }, // Spiderman 1
+                { url: kittyUrl, size: 70, targetPos: { top: '50%', left: '70%' } },       // Kitty
+                { url: spiderman2Url, size: 90, targetPos: { top: '70%', left: '30%' } }, // Spiderman 2
+            ];
+
+            personajes.forEach((p, index) => {
+                const charDiv = document.createElement('div');
+                charDiv.classList.add('character');
+                charDiv.id = `char-${index}`;
+                charDiv.style.width = `${p.size}px`;
+                charDiv.style.top = p.targetPos.top;
+                charDiv.style.left = p.targetPos.left;
+                
+                const img = document.createElement('img');
+                img.src = p.url;
+                img.alt = `Personaje ${index}`;
+                
+                charDiv.appendChild(img);
+                container.appendChild(charDiv);
+
+                // Forzar expansión después de un pequeño retraso
+                setTimeout(() => {
+                    charDiv.classList.add('expandir');
+                }, 700 + index * 200); // Retraso escalonado para cada personaje
+            });
+        }
+
+        // --- MEJORA 2: Frases Románticas Flotantes alrededor del centro ---
+        function iniciarFrasesFlotantes() {
+            const container = document.getElementById('floating-phrases-container');
+            
             const timer = setInterval(() => {
-                const p = document.createElement('div');
-                p.classList.add('particle');
-                p.style.left = `${Math.random() * 100}%`;
-                p.style.top = '100%'; // Comienzan desde abajo
+                const phraseText = listaFrasesRomanticas[Math.floor(Math.random() * listaFrasesRomanticas.length)];
+                const phraseColor = coloresNeon[Math.floor(Math.random() * coloresNeon.length)];
+                
+                const span = document.createElement('span');
+                span.classList.add('floating-phrase');
+                span.innerText = phraseText;
+                span.style.color = phraseColor;
+                span.style.textShadow = `0 0 10px ${phraseColor}`;
+                
+                // Posicionamiento horizontal aleatorio (más o menos centrado)
+                span.style.left = `${10 + Math.random() * 80}%`;
+                span.style.top = '100%'; // Comienzan abajo
 
                 // Movimiento hacia arriba
-                const speed = 2 + Math.random() * 3; // Velocidad aleatoria
-                let top = 100;
+                const speed = 2 + Math.random() * 2; // Velocidad aleatoria suave
+                let topPos = 100;
                 
                 const moveTimer = setInterval(() => {
-                    top -= speed;
-                    p.style.top = `${top}%`;
+                    topPos -= speed;
+                    span.style.top = `${topPos}%`;
                     
-                    // Eliminar partícula si sale de la pantalla
-                    if (top < -5) {
+                    // Eliminar si sale de la pantalla
+                    if (topPos < -10) {
                         clearInterval(moveTimer);
-                        p.remove();
+                        span.remove();
                     }
-                }, 30); // 30ms para un movimiento suave
+                }, 30); // 30ms para movimiento suave
                 
-                container.appendChild(p);
+                container.appendChild(span);
 
-            }, 500); // Nueva partícula cada 500ms
+            }, 800); // Nueva frase cada 800ms
             
             neonTimers.push(timer);
         }
 
-        // Movimiento sutil de personajes con el mouse
-        function iniciarMovimientoPersonajes() {
+        // Movimiento sutil de personajes con el mouse (Mantenido)
+        function iniciarMovimientoPersonajesConMouse() {
             document.addEventListener('mousemove', (e) => {
+                // Solo mover si la pestaña neón está activa
                 if (!document.getElementById('neon-stage').classList.contains('active')) return;
 
-                const stage = document.getElementById('neon-stage');
-                const width = stage.offsetWidth;
-                const height = stage.offsetHeight;
+                const width = window.innerWidth;
+                const height = window.innerHeight;
                 
                 const mouseX = e.clientX / width - 0.5; // -0.5 a 0.5
                 const mouseY = e.clientY / height - 0.5; // -0.5 a 0.5
 
                 const chars = document.querySelectorAll('.character');
                 chars.forEach(char => {
-                    const targetX = parseFloat(char.dataset.targetX);
-                    const targetY = parseFloat(char.dataset.targetY);
-
-                    const finalX = targetX + mouseX * 10; // Mover 10%
-                    const finalY = targetY + mouseY * 10; // Mover 10%
-
-                    char.style.transform = `translate(${finalX - targetX}%, ${finalY - targetY}%)`;
+                    // Mover suavemente en el eje X e Y
+                    char.style.transform = `translate(${mouseX * 20}%, ${mouseY * 20}%) scale(1)`; 
+                    // El "scale(1)" es crucial para que no se resetee la expansión
                 });
             });
         }
